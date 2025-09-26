@@ -11,7 +11,6 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Footer } from "@/components/footer";
 import { ShoppingCart, Star, Download, BookOpen, Crown } from "lucide-react";
-import { useCart } from "@/contexts/CartContext";
 import { useState } from "react";
 import Link from "next/link";
 
@@ -111,7 +110,6 @@ const categories = [
 ];
 
 export default function ShopPage() {
-  const { addItem } = useCart();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (

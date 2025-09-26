@@ -1,9 +1,17 @@
-import type { Metadata } from "next"
-import { Geist, Geist_Mono } from "next/font/google"
-import "./globals.css"
-import { Header } from "@/components/header"
-import { CartProvider } from "@/contexts/CartContext"
-import { AuthProvider } from "@/contexts/AuthContext"
+import type { Metadata } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
+import "./globals.css";
+import { Header } from "@/components/header";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import AppProvider from "@/components/app-provider";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,7 +25,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "LogiNeko - Learn with a Cat Neko",
-  description: "Fun, safe, and educational mobile app where children learn with their adorable cat companion Neko. Interactive stories, games, and activities designed for ages 3-8.",
+  description:
+    "Fun, safe, and educational mobile app where children learn with their adorable cat companion Neko. Interactive stories, games, and activities designed for ages 3-8.",
 };
 
 export default function RootLayout({
@@ -27,13 +36,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <AuthProvider>
-          <CartProvider>
-            <Header />
-            {children}
-          </CartProvider>
-        </AuthProvider>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        <AppProvider>
+          <Header />
+          {children}
+        </AppProvider>
       </body>
     </html>
   );

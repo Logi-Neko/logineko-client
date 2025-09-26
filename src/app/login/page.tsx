@@ -1,166 +1,184 @@
-"use client"
+/* eslint-disable react-hooks/exhaustive-deps */
+"use client";
+import React, { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Eye, EyeOff, User, Lock, LogIn } from "lucide-react";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { useLoginMutation } from "@/queries/useAuth";
+import { useRouter } from "next/navigation";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { useAuth } from "@/contexts/AuthContext"
-import { Eye, EyeOff, Mail, Lock, ArrowLeft } from "lucide-react"
-import Link from "next/link"
-import { useRouter } from "next/navigation"
+const LoginPage = () => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const router = useRouter();
 
-export default function LoginPage() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [showPassword, setShowPassword] = useState(false)
-  const [error, setError] = useState("")
-  const { login, state } = useAuth()
-  const router = useRouter()
+  const loginMutation = useLoginMutation();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError("")
+  useEffect(() => {
+    const token = localStorage.getItem("access_token");
+    setIsAuthenticated(!!token);
+  }, []);
 
-    if (!email || !password) {
-      setError("Please fill in all fields")
-      return
-    }
+  useEffect(() => {
+    if (loginMutation.isSuccess && loginMutation.data?.data?.access_token) {
+      console.log("Login successful!", loginMutation.data);
 
-    const success = await login(email, password)
-    if (success) {
-      // Redirect based on user role
-      if (state.user?.role === 'admin') {
-        router.push('/admin')
-      } else {
-        router.push('/')
+      const { access_token, refresh_token } = loginMutation.data.data;
+      localStorage.setItem("access_token", access_token);
+      if (refresh_token) {
+        localStorage.setItem("refresh_token", refresh_token);
       }
-    } else {
-      setError("Invalid email or password")
+
+      setIsAuthenticated(true);
+
+      router.push("/");
     }
-  }
+  }, [loginMutation.isSuccess, loginMutation.data]);
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (
+      e.key === "Enter" &&
+      !loginMutation.isPending &&
+      username.trim() &&
+      password.trim()
+    ) {
+      handleSubmit();
+    }
+  };
+
+  const handleSubmit = () => {
+    if (!username.trim() || !password.trim()) return;
+
+    loginMutation.mutate({
+      username: username.trim(),
+      password: password.trim(),
+    });
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-cyan-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        {/* Back to Home */}
-        <Link 
-          href="/" 
-          className="inline-flex items-center text-gray-600 hover:text-gray-800 mb-6 transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back to Home
-        </Link>
+    <div className="min-h-screen bg-gradient-to-br from-pink-500 to-violet-600 flex items-center justify-center p-4">
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute -top-40 -right-32 w-80 h-80 bg-white/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute -bottom-40 -left-32 w-80 h-80 bg-white/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
+      </div>
 
-        <Card className="shadow-playful border-0 bg-white/80 backdrop-blur-md">
-          <CardHeader className="text-center space-y-4">
-            <div className="w-16 h-16 bg-gradient-primary rounded-full flex items-center justify-center mx-auto">
-              <span className="text-white font-bold text-2xl">🐱</span>
-            </div>
-            <div>
-              <CardTitle className="text-2xl font-bold text-gray-800">
-                Welcome Back!
-              </CardTitle>
-              <CardDescription className="text-gray-600 mt-2">
-                Sign in to continue your learning journey with Neko
-              </CardDescription>
-            </div>
-          </CardHeader>
+      <Card className="w-full max-w-md relative bg-white/95 backdrop-blur-sm shadow-2xl border-0">
+        <CardHeader className="text-center pb-6">
+          <div className="mx-auto w-16 h-16 bg-gradient-to-br from-pink-500 to-violet-600 rounded-full flex items-center justify-center mb-4 shadow-lg">
+            <LogIn className="w-8 h-8 text-white" />
+          </div>
+          <CardTitle className="text-3xl font-bold bg-gradient-to-br from-pink-600 to-violet-600 bg-clip-text text-transparent">
+            Đăng nhập
+          </CardTitle>
+          <CardDescription className="text-gray-600 text-base">
+            Nhập thông tin để truy cập hệ thống
+          </CardDescription>
+        </CardHeader>
 
-          <CardContent className="space-y-6">
-            {/* Demo Credentials */}
-            <div className="bg-blue-50 border border-blue-200 rounded-playful p-4">
-              <h4 className="font-semibold text-blue-800 mb-2">Demo Credentials:</h4>
-              <div className="text-sm text-blue-700 space-y-1">
-                <div><strong>Admin:</strong> admin@logineko.com / admin123</div>
-                <div><strong>User:</strong> user@example.com / user123</div>
+        <CardContent>
+          <div className="space-y-6">
+            {loginMutation.isError && (
+              <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-red-600 text-sm">
+                  {loginMutation.error?.message ||
+                    "Đăng nhập thất bại. Vui lòng thử lại!"}
+                </p>
+              </div>
+            )}
+
+            <div className="space-y-2">
+              <Label
+                htmlFor="username"
+                className="text-sm font-medium text-gray-700"
+              >
+                Tên đăng nhập
+              </Label>
+              <div className="relative">
+                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <Input
+                  id="username"
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder="Nhập tên đăng nhập"
+                  className="pl-10 h-12 border-gray-200 focus:border-pink-400 focus:ring-pink-400 transition-all duration-200"
+                  required
+                  disabled={loginMutation.isPending}
+                />
               </div>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {/* Email Field */}
-              <div className="space-y-2">
-                <label htmlFor="email" className="text-sm font-medium text-gray-700">
-                  Email Address
-                </label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                  <input
-                    id="email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-playful focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-transparent transition-all"
-                    placeholder="Enter your email"
-                    required
-                  />
+            <div className="space-y-2">
+              <Label
+                htmlFor="password"
+                className="text-sm font-medium text-gray-700"
+              >
+                Mật khẩu
+              </Label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <Input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder="Nhập mật khẩu"
+                  className="pl-10 pr-10 h-12 border-gray-200 focus:border-pink-400 focus:ring-pink-400 transition-all duration-200"
+                  required
+                  disabled={loginMutation.isPending}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                  disabled={loginMutation.isPending}
+                >
+                  {showPassword ? (
+                    <EyeOff className="w-5 h-5" />
+                  ) : (
+                    <Eye className="w-5 h-5" />
+                  )}
+                </button>
+              </div>
+            </div>
+
+            <Button
+              onClick={handleSubmit}
+              className="w-full h-12 bg-gradient-to-r from-pink-500 to-violet-600 hover:from-pink-600 hover:to-violet-700 text-white font-semibold text-base shadow-lg hover:shadow-xl transform transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+              disabled={
+                loginMutation.isPending || !username.trim() || !password.trim()
+              }
+            >
+              {loginMutation.isPending ? (
+                <div className="flex items-center space-x-2">
+                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                  <span>Đang đăng nhập...</span>
                 </div>
-              </div>
-
-              {/* Password Field */}
-              <div className="space-y-2">
-                <label htmlFor="password" className="text-sm font-medium text-gray-700">
-                  Password
-                </label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                  <input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="w-full pl-10 pr-12 py-3 border border-gray-200 rounded-playful focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-transparent transition-all"
-                    placeholder="Enter your password"
-                    required
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                  >
-                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                  </button>
-                </div>
-              </div>
-
-              {/* Error Message */}
-              {error && (
-                <div className="bg-red-50 border border-red-200 rounded-playful p-3">
-                  <p className="text-red-700 text-sm">{error}</p>
+              ) : (
+                <div className="flex items-center space-x-2">
+                  <LogIn className="w-5 h-5" />
+                  <span>Đăng nhập</span>
                 </div>
               )}
-
-              {/* Submit Button */}
-              <Button
-                type="submit"
-                disabled={state.isLoading}
-                className="w-full bg-gradient-primary hover:opacity-90 text-black rounded-playful py-3 font-semibold shadow-playful transition-all"
-              >
-                {state.isLoading ? (
-                  <div className="flex items-center justify-center">
-                    <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin mr-2"></div>
-                    Signing In...
-                  </div>
-                ) : (
-                  "Sign In"
-                )}
-              </Button>
-            </form>
-
-            {/* Register Link */}
-            <div className="text-center">
-              <p className="text-gray-600">
-                Don't have an account?{" "}
-                <Link 
-                  href="/register" 
-                  className="text-pink-600 hover:text-pink-700 font-semibold transition-colors"
-                >
-                  Sign up here
-                </Link>
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
     </div>
-  )
-}
+  );
+};
+
+export default LoginPage;

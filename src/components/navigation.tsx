@@ -13,8 +13,6 @@ import {
   Settings,
   Smile,
 } from "lucide-react";
-import { useCart } from "@/contexts/CartContext";
-import { useAuth } from "@/contexts/AuthContext";
 import {
   Dialog,
   DialogContent,
@@ -27,8 +25,6 @@ export function Navigation() {
   const [open, setOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
-  const { state } = useCart();
-  const { state: authState, logout } = useAuth();
   const userMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -89,75 +85,19 @@ export function Navigation() {
 
           {/* Nút tải xuống và giỏ hàng */}
           <div className="hidden md:flex items-center space-x-4">
-            {/* <Link href="/cart">
+            <Link href="/cart">
               <Button variant="ghost" size="sm" className="relative">
                 <ShoppingCart className="w-5 h-5" />
-                {state.itemCount > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                    {state.itemCount}
-                  </span>
-                )}
               </Button>
-            </Link> */}
+            </Link>
 
-            {/* Menu người dùng */}
-            {/* {authState.isAuthenticated ? (
-              <div className="relative" ref={userMenuRef}>
-                <button
-                  onClick={() => setUserMenuOpen(!userMenuOpen)}
-                  className="flex items-center space-x-2 p-2 text-gray-600 hover:text-pink-600 transition-colors"
-                >
-                  <div className="w-8 h-8 bg-gradient-secondary rounded-full flex items-center justify-center">
-                    <span className="text-gray-800 font-semibold text-sm">
-                      {authState.user?.name?.charAt(0).toUpperCase()}
-                    </span>
-                  </div>
-                </button>
-
-                {userMenuOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
-                    <div className="px-4 py-2 border-b border-gray-100">
-                      <p className="text-sm font-medium text-gray-900">
-                        {authState.user?.name}
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        {authState.user?.email}
-                      </p>
-                    </div>
-
-                    {authState.user?.role === "admin" && (
-                      <Link
-                        href="/admin"
-                        className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
-                        onClick={() => setUserMenuOpen(false)}
-                      >
-                        <Settings className="w-4 h-4 mr-2" />
-                        Bảng điều khiển
-                      </Link>
-                    )}
-
-                    <button
-                      onClick={() => {
-                        logout();
-                        setUserMenuOpen(false);
-                      }}
-                      className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
-                    >
-                      <LogOut className="w-4 h-4 mr-2" />
-                      Đăng xuất
-                    </button>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <Link
-                href="/login"
-                className="flex items-center space-x-2 p-2 text-gray-600 hover:text-pink-600 transition-colors"
-              >
-                <User className="w-5 h-5" />
-                <span className="hidden sm:inline">Đăng nhập</span>
-              </Link>
-            )} */}
+            <Link
+              href="/login"
+              className="flex items-center space-x-2 p-2 text-gray-600 hover:text-pink-600 transition-colors"
+            >
+              <User className="w-5 h-5" />
+              <span className="hidden sm:inline">Đăng nhập</span>
+            </Link>
 
             <Button
               onClick={() => setOpen(true)}
@@ -248,73 +188,26 @@ export function Navigation() {
                   <Link href="/cart">
                     <Button variant="ghost" size="sm" className="relative">
                       <ShoppingCart className="w-5 h-5" />
-                      {state.itemCount > 0 && (
-                        <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                          {state.itemCount}
-                        </span>
-                      )}
                     </Button>
                   </Link>
                 </div>
 
-                {authState.isAuthenticated ? (
-                  <div className="border-t border-gray-200 pt-4 mb-4">
-                    <div className="flex items-center mb-3">
-                      <div className="w-8 h-8 bg-gradient-secondary rounded-full flex items-center justify-center">
-                        <span className="text-gray-800 font-semibold text-sm">
-                          {authState.user?.name?.charAt(0).toUpperCase()}
-                        </span>
-                      </div>
-                      <div className="ml-3">
-                        <div className="text-sm font-medium text-gray-800">
-                          {authState.user?.name}
-                        </div>
-                        <div className="text-xs text-gray-500">
-                          {authState.user?.email}
-                        </div>
-                      </div>
-                    </div>
-
-                    {authState.user?.role === "admin" && (
-                      <Link
-                        href="/admin"
-                        className="block w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded mb-2"
-                        onClick={() => setIsOpen(false)}
-                      >
-                        <Settings className="w-4 h-4 mr-2 inline" />
-                        Bảng điều khiển
-                      </Link>
-                    )}
-
-                    <button
-                      onClick={() => {
-                        logout();
-                        setIsOpen(false);
-                      }}
-                      className="block w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded"
-                    >
-                      <LogOut className="w-4 h-4 mr-2 inline" />
-                      Đăng xuất
-                    </button>
-                  </div>
-                ) : (
-                  <div className="border-t border-gray-200 pt-4 mb-4 space-y-2">
-                    <Link
-                      href="/login"
-                      className="block w-full text-center bg-gradient-primary hover:opacity-90 text-black rounded-playful px-4 py-2 font-semibold shadow-playful"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      Đăng nhập
-                    </Link>
-                    <Link
-                      href="/register"
-                      className="block w-full text-center border border-gray-300 text-gray-700 rounded-playful px-4 py-2 font-semibold hover:bg-gray-50"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      Đăng ký
-                    </Link>
-                  </div>
-                )}
+                <div className="border-t border-gray-200 pt-4 mb-4 space-y-2">
+                  <Link
+                    href="/login"
+                    className="block w-full text-center bg-gradient-primary hover:opacity-90 text-black rounded-playful px-4 py-2 font-semibold shadow-playful"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Đăng nhập
+                  </Link>
+                  <Link
+                    href="/register"
+                    className="block w-full text-center border border-gray-300 text-gray-700 rounded-playful px-4 py-2 font-semibold hover:bg-gray-50"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Đăng ký
+                  </Link>
+                </div>
 
                 <Button className="w-full bg-gradient-primary hover:opacity-90 text-black rounded-playful font-semibold">
                   <Download className="w-4 h-4 mr-2" />
