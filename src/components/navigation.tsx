@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Menu,
@@ -20,12 +20,14 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+import { AuthContext } from "@/contexts/AuthContext";
 
 export function Navigation() {
   const [open, setOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
+  const { isAuthenticated, profile } = useContext(AuthContext);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -85,19 +87,31 @@ export function Navigation() {
 
           {/* Nút tải xuống và giỏ hàng */}
           <div className="hidden md:flex items-center space-x-4">
-            <Link href="/cart">
+            {/* <Link href="/cart">
               <Button variant="ghost" size="sm" className="relative">
                 <ShoppingCart className="w-5 h-5" />
               </Button>
-            </Link>
+            </Link> */}
 
-            <Link
-              href="/login"
-              className="flex items-center space-x-2 p-2 text-gray-600 hover:text-pink-600 transition-colors"
-            >
-              <User className="w-5 h-5" />
-              <span className="hidden sm:inline">Đăng nhập</span>
-            </Link>
+            <div>
+              {isAuthenticated && profile ? (
+                <Link
+                  href="/profile"
+                  className="flex items-center space-x-2 p-2 text-gray-600 hover:text-pink-600 transition-colors"
+                >
+                  <User className="w-5 h-5" />
+                  <span>{profile.fullName}</span>
+                </Link>
+              ) : (
+                <Link
+                  href="/login"
+                  className="flex items-center space-x-2 p-2 text-gray-600 hover:text-pink-600 transition-colors"
+                >
+                  <User className="w-5 h-5" />
+                  <span className="hidden sm:inline">Đăng nhập</span>
+                </Link>
+              )}
+            </div>
 
             <Button
               onClick={() => setOpen(true)}

@@ -1,6 +1,5 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -14,20 +13,18 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { useLoginMutation } from "@/queries/useAuth";
 import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
+import { AuthContext } from "@/contexts/AuthContext";
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const router = useRouter();
+  const { setIsAuthenticated } = useContext(AuthContext);
+  const queryClient = useQueryClient();
 
   const loginMutation = useLoginMutation();
-
-  useEffect(() => {
-    const token = localStorage.getItem("access_token");
-    setIsAuthenticated(!!token);
-  }, []);
 
   useEffect(() => {
     if (loginMutation.isSuccess && loginMutation.data?.data?.access_token) {
@@ -41,9 +38,19 @@ const LoginPage = () => {
 
       setIsAuthenticated(true);
 
-      router.push("/");
+      queryClient.invalidateQueries({ queryKey: ["account-me"] });
+
+      setTimeout(() => {
+        router.push("/");
+      }, 100);
     }
-  }, [loginMutation.isSuccess, loginMutation.data]);
+  }, [
+    loginMutation.isSuccess,
+    loginMutation.data,
+    setIsAuthenticated,
+    queryClient,
+    router,
+  ]);
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (
