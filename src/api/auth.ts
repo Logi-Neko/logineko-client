@@ -1,4 +1,4 @@
-import { apiGet, apiPost, sendRequest } from "@/lib/api";
+import { apiGet, apiPost } from "@/lib/api";
 import { ApiResponse } from "@/types/api";
 import { LoginRequest, LoginResponse } from "@/types/auth";
 import { User } from "@/types/user";

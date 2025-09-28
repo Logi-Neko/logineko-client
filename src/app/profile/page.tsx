@@ -36,9 +36,11 @@ import {
 import { format } from "date-fns";
 import { vi } from "date-fns/locale";
 import logo from "../../assets/LOGO.jpg";
+import SubscriptionModal from "@/components/subscription-modal";
 
 const ProfilePage = () => {
   const { profile, reset } = useContext(AuthContext);
+  const [open, setOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editData, setEditData] = useState({
     fullName: profile?.fullName || "",
@@ -280,10 +282,15 @@ const ProfilePage = () => {
               ) : (
                 <div className="bg-gradient-to-r from-pink-100 to-violet-100 p-6 rounded-xl border border-pink-200">
                   <div className="text-center">
-                    <Crown className="w-12 h-12 text-pink-400 mx-auto mb-4" />
-                    <h3 className="text-lg font-bold text-gray-800 mb-2">
+                    <Button
+                      onClick={() => setOpen(true)}
+                      className="bg-gradient-to-r from-purple-500 to-pink-500 hover:opacity-90 text-white rounded-xl px-6 py-3 cursor-pointer font-semibold shadow-lg transition-all duration-300 hover:shadow-xl"
+                    >
+                      <Crown className="w-4 h-4 mr-2" />
                       Nâng cấp Premium
-                    </h3>
+                    </Button>
+
+                    <SubscriptionModal open={open} onOpenChange={setOpen} />
                     <p className="text-gray-600 mb-4">
                       Trải nghiệm tất cả tính năng cao cấp
                     </p>
