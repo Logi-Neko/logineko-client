@@ -51,16 +51,16 @@ export default function SubscriptionModal({
   const plans: Record<"month" | "year", Plan> = {
     year: {
       type: "year",
-      price: 1790000,
-      originalPrice: 2388000,
-      monthlyPrice: 149000,
-      discount: 25,
+      price: 549000,
+      originalPrice: 700000,
+      monthlyPrice: 45000,
+      discount: 20,
       popular: true,
     },
     month: {
       type: "month",
-      price: 199000,
-      monthlyPrice: 199000,
+      price: 59000,
+      monthlyPrice: 59000,
       discount: 0,
       popular: false,
     },
@@ -133,7 +133,7 @@ export default function SubscriptionModal({
           </div>
 
           <div className="bg-gradient-to-r from-red-500 to-pink-500 text-white px-4 py-2 rounded-full text-sm font-semibold inline-block">
-            Tiết kiệm 25% với gói hàng năm của chúng tôi!
+            Tiết kiệm 20% với gói hàng năm của chúng tôi!
           </div>
         </DialogHeader>
 
@@ -148,7 +148,7 @@ export default function SubscriptionModal({
           >
             <div className="absolute -top-2 left-4">
               <span className="bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold">
-                25% OFF
+                20% OFF
               </span>
             </div>
 
