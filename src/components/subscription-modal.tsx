@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -11,6 +11,7 @@ import { SubscriptionData } from "@/types/subscription";
 import { useSubscriptionMutation } from "@/queries/useSubscription";
 import { usePaymentMutation } from "@/queries/usePayment";
 import { PaymentRequest } from "@/types/payment";
+import { AuthContext } from "@/contexts/AuthContext";
 
 interface SubscriptionModalProps {
   open: boolean;
@@ -33,6 +34,7 @@ export default function SubscriptionModal({
   const [selectedPlan, setSelectedPlan] = useState<"month" | "year">("month");
   const subscriptionMutation = useSubscriptionMutation();
   const paymentMutation = usePaymentMutation();
+  const { profile } = useContext(AuthContext);
 
   const getCurrentDate = (): string => {
     return new Date().toISOString().split("T")[0];
@@ -73,7 +75,7 @@ export default function SubscriptionModal({
   const generateSubscriptionData = (): SubscriptionData => {
     const plan = plans[selectedPlan];
     return {
-      accountId: 0,
+      accountId: profile!.id,
       type: selectedPlan,
       startDate: getCurrentDate(),
       endDate: getEndDate(selectedPlan),
@@ -91,8 +93,12 @@ export default function SubscriptionModal({
       );
 
       if (subscriptionResponse) {
+        const subscriptionId = subscriptionResponse.data.id;
+        const random = Math.floor(Math.random() * 1000);
+
+        const orderCode = Number(`${subscriptionId}${random}`);
         const paymentRequest: PaymentRequest = {
-          orderCode: subscriptionResponse.data.id,
+          orderCode: orderCode,
           amount: subscriptionResponse.data.price,
           description: `Thanh toán gói ${subscriptionResponse.data.type}`,
         };
@@ -217,7 +223,7 @@ export default function SubscriptionModal({
           </div>
 
           <Button
-            onClick={handleUpgrade}
+            onClick={() => handleUpgrade()}
             className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-4 rounded-2xl text-lg shadow-lg transition-all duration-300 hover:shadow-xl transform hover:scale-105"
           >
             <Crown className="w-5 h-5 mr-2" />

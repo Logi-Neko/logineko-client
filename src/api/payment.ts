@@ -1,10 +1,13 @@
-import { apiPost } from "@/lib/api";
-import { ApiResponse } from "@/types/api";
+import { sendRequest } from "@/lib/api";
 import { PaymentRequest, PaymentResponse } from "@/types/payment";
 
 const paymentApiRequest = {
   createPayment: (params: PaymentRequest) =>
-    apiPost<PaymentResponse>("payment", { params }),
+    sendRequest<PaymentResponse>({
+      url: "payment",
+      method: "POST",
+      queryParams: params,
+    }),
 };
 
 export default paymentApiRequest;

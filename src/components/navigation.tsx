@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import Link from "next/link";
@@ -6,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Menu, X, Download, ShoppingCart, User, Crown } from "lucide-react";
 import { AuthContext } from "@/contexts/AuthContext";
 import SubscriptionModal from "./subscription-modal";
+import logo from "../assets/LOGO.jpg";
 
 export function Navigation() {
   const [open, setOpen] = useState(false);
@@ -36,7 +38,11 @@ export function Navigation() {
         <div className="flex justify-between items-center h-16">
           <Link href="/" className="flex items-center space-x-2">
             <div className="w-10 h-10 bg-gradient-primary rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-xl">🐱</span>
+              <img
+                src={logo.src}
+                alt="Logo"
+                className="w-full h-full object-cover"
+              />
             </div>
             <span className="text-2xl font-bold text-gradient">LogiNeko</span>
           </Link>
