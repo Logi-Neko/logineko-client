@@ -28,10 +28,16 @@ const LoginPage: React.FC = () => {
 
   const router = useRouter();
   const queryClient = useQueryClient();
-  const { setIsAuthenticated } = useContext(AuthContext);
+  const { isAuthenticated, setIsAuthenticated } = useContext(AuthContext);
 
   const loginMutation = useLoginMutation();
   const loginGGMutation = useLoginGGMutation();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push("/");
+    }
+  }, [isAuthenticated, router]);
 
   useEffect(() => {
     if (loginMutation.isSuccess && loginMutation.data?.data?.access_token) {

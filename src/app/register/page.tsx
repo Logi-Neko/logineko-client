@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Eye, EyeOff, User, Mail, Lock, UserCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,6 +26,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { AuthContext } from "@/contexts/AuthContext";
 
 const RegisterPage: React.FC = () => {
   const [formData, setFormData] = useState<RegisterRequest>({
@@ -39,8 +40,15 @@ const RegisterPage: React.FC = () => {
   const [errors, setErrors] = useState<Partial<RegisterRequest>>({});
   const [success, setSuccess] = useState(false);
   const router = useRouter();
+  const { isAuthenticated } = useContext(AuthContext);
 
   const registerMutation = useRegisterMutation();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push("/");
+    }
+  }, [isAuthenticated, router]);
 
   const handleInputChange =
     (field: keyof RegisterRequest) =>
