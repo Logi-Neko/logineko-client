@@ -7,6 +7,12 @@ export const useLoginMutation = () => {
   });
 };
 
+export const useLoginGGMutation = () => {
+  return useMutation({
+    mutationFn: authApiRequest.loginGG,
+  });
+};
+
 export const useAccountMe = () => {
   const token =
     typeof window !== "undefined" ? localStorage.getItem("access_token") : null;

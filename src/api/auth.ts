@@ -6,6 +6,8 @@ import { User } from "@/types/user";
 const authApiRequest = {
   me: () => apiGet<ApiResponse<User>>("userinfo"),
   login: (body: LoginRequest) => apiPost<LoginResponse>("login/exchange", body),
+  loginGG: (idToken: string) =>
+    apiPost<LoginResponse>(`login/google?id_token=${idToken}`),
 };
 
 export default authApiRequest;

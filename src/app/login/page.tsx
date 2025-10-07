@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import React, { useState, useEffect, useContext } from "react";
 import { Button } from "@/components/ui/button";
@@ -11,48 +12,39 @@ import {
 import { Eye, EyeOff, User, Lock, LogIn } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { useLoginMutation } from "@/queries/useAuth";
+import { useLoginMutation, useLoginGGMutation } from "@/queries/useAuth";
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { AuthContext } from "@/contexts/AuthContext";
+import logo from "../../assets/LOGO.jpg";
+import { GoogleLogin } from "@react-oauth/google";
 
-const LoginPage = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+const LoginPage: React.FC = () => {
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+
   const router = useRouter();
-  const { setIsAuthenticated } = useContext(AuthContext);
   const queryClient = useQueryClient();
+  const { setIsAuthenticated } = useContext(AuthContext);
 
   const loginMutation = useLoginMutation();
+  const loginGGMutation = useLoginGGMutation();
 
+  // Username/password login
   useEffect(() => {
     if (loginMutation.isSuccess && loginMutation.data?.data?.access_token) {
-      console.log("Login successful!", loginMutation.data);
-
       const { access_token, refresh_token } = loginMutation.data.data;
       localStorage.setItem("access_token", access_token);
-      if (refresh_token) {
-        localStorage.setItem("refresh_token", refresh_token);
-      }
+      if (refresh_token) localStorage.setItem("refresh_token", refresh_token);
 
       setIsAuthenticated(true);
-
       queryClient.invalidateQueries({ queryKey: ["account-me"] });
-
-      setTimeout(() => {
-        router.push("/");
-      }, 100);
+      router.push("/");
     }
-  }, [
-    loginMutation.isSuccess,
-    loginMutation.data,
-    setIsAuthenticated,
-    queryClient,
-    router,
-  ]);
+  }, [loginMutation, setIsAuthenticated, queryClient, router]);
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (
       e.key === "Enter" &&
       !loginMutation.isPending &&
@@ -65,11 +57,42 @@ const LoginPage = () => {
 
   const handleSubmit = () => {
     if (!username.trim() || !password.trim()) return;
-
     loginMutation.mutate({
       username: username.trim(),
       password: password.trim(),
     });
+  };
+
+  // Google Login Success Handler
+  const handleGoogleSuccess = (credentialResponse: any) => {
+    console.log("Google credential response:", credentialResponse);
+
+    const id_token = credentialResponse.credential;
+
+    if (id_token) {
+      console.log("ID Token:", id_token);
+
+      loginGGMutation.mutate(id_token, {
+        onSuccess: (res) => {
+          console.log("Google login success:", res);
+          const { access_token, refresh_token } = res.data;
+          localStorage.setItem("access_token", access_token);
+          if (refresh_token)
+            localStorage.setItem("refresh_token", refresh_token);
+
+          setIsAuthenticated(true);
+          queryClient.invalidateQueries({ queryKey: ["account-me"] });
+          router.push("/");
+        },
+        onError: (err) => {
+          console.error("Login GG API failed:", err);
+        },
+      });
+    }
+  };
+
+  const handleGoogleError = () => {
+    console.error("Google login failed");
   };
 
   return (
@@ -82,8 +105,12 @@ const LoginPage = () => {
 
       <Card className="w-full max-w-md relative bg-white/95 backdrop-blur-sm shadow-2xl border-0">
         <CardHeader className="text-center pb-6">
-          <div className="mx-auto w-16 h-16 bg-gradient-to-br from-pink-500 to-violet-600 rounded-full flex items-center justify-center mb-4 shadow-lg">
-            <LogIn className="w-8 h-8 text-white" />
+          <div className="mx-auto w-24 h-24 flex items-center justify-center rounded-full overflow-hidden border-2 border-black ">
+            <img
+              src={logo.src}
+              alt="Logo"
+              className="w-full h-full object-cover"
+            />
           </div>
           <CardTitle className="text-3xl font-bold bg-gradient-to-br from-pink-600 to-violet-600 bg-clip-text text-transparent">
             Đăng nhập
@@ -95,6 +122,7 @@ const LoginPage = () => {
 
         <CardContent>
           <div className="space-y-6">
+            {/* Error messages */}
             {loginMutation.isError && (
               <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
                 <p className="text-red-600 text-sm">
@@ -104,6 +132,15 @@ const LoginPage = () => {
               </div>
             )}
 
+            {loginGGMutation.isError && (
+              <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-red-600 text-sm">
+                  Google login failed: {loginGGMutation.error?.message}
+                </p>
+              </div>
+            )}
+
+            {/* Username */}
             <div className="space-y-2">
               <Label
                 htmlFor="username"
@@ -127,6 +164,7 @@ const LoginPage = () => {
               </div>
             </div>
 
+            {/* Password */}
             <div className="space-y-2">
               <Label
                 htmlFor="password"
@@ -162,9 +200,10 @@ const LoginPage = () => {
               </div>
             </div>
 
+            {/* Login button */}
             <Button
               onClick={handleSubmit}
-              className="w-full h-12 bg-gradient-to-r from-pink-500 to-violet-600 hover:from-pink-600 hover:to-violet-700 text-white font-semibold text-base shadow-lg hover:shadow-xl transform transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+              className="w-full h-12 cursor-pointer bg-gradient-to-r from-pink-500 to-violet-600 hover:from-pink-600 hover:to-violet-700 text-white font-semibold text-base shadow-lg hover:shadow-xl transform transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
               disabled={
                 loginMutation.isPending || !username.trim() || !password.trim()
               }
@@ -181,6 +220,28 @@ const LoginPage = () => {
                 </div>
               )}
             </Button>
+
+            {/* Divider */}
+            <div className="flex items-center my-4">
+              <div className="flex-1 h-px bg-gray-300"></div>
+              <span className="px-3 text-sm text-gray-500">
+                hoặc đăng nhập với
+              </span>
+              <div className="flex-1 h-px bg-gray-300"></div>
+            </div>
+
+            {/* Google login */}
+            <div className="flex justify-center">
+              <GoogleLogin
+                onSuccess={handleGoogleSuccess}
+                onError={handleGoogleError}
+                theme="outline"
+                size="large"
+                text="continue_with"
+                width="100%"
+                logo_alignment="left"
+              />
+            </div>
           </div>
         </CardContent>
       </Card>

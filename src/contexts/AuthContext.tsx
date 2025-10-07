@@ -53,8 +53,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const token = localStorage.getItem("access_token");
     if (token && isSuccess && data) {
       handleSetProfile(data.data);
-    }
-    if (isError) {
+    } else if (isError) {
       reset();
     }
   }, [data, isSuccess, isError]);
