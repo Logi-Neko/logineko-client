@@ -13,6 +13,12 @@ export const useLoginGGMutation = () => {
   });
 };
 
+export const useRegisterMutation = () => {
+  return useMutation({
+    mutationFn: authApiRequest.register,
+  });
+};
+
 export const useAccountMe = () => {
   const token =
     typeof window !== "undefined" ? localStorage.getItem("access_token") : null;

@@ -37,6 +37,7 @@ import { format } from "date-fns";
 import { vi } from "date-fns/locale";
 import logo from "../../assets/LOGO.jpg";
 import SubscriptionModal from "@/components/subscription-modal";
+import { useRouter } from "next/navigation";
 
 const ProfilePage = () => {
   const { profile, reset } = useContext(AuthContext);
@@ -47,6 +48,7 @@ const ProfilePage = () => {
     email: profile?.email || "",
     dateOfBirth: profile?.dateOfBirth || "",
   });
+  const router = useRouter();
 
   if (!profile) {
     return (
@@ -75,6 +77,12 @@ const ProfilePage = () => {
       dateOfBirth: profile?.dateOfBirth || "",
     });
     setIsEditing(false);
+  };
+
+  const handleLogout = () => {
+    console.log("Logging out...");
+    reset();
+    router.push("/");
   };
 
   const getInitials = (name: string) => {
@@ -161,15 +169,15 @@ const ProfilePage = () => {
                   variant="outline"
                   size="icon"
                   onClick={() => setIsEditing(true)}
-                  className="border-white/50 text-white hover:bg-white/20"
+                  className="border-red-300 text-red-100 bg-red-500/20 hover:bg-red-500 hover:border-red-400 hover:text-white transition-all duration-200"
                 >
                   <Edit3 className="w-4 h-4" />
                 </Button>
                 <Button
                   variant="outline"
                   size="icon"
-                  onClick={reset}
-                  className="border-white/50 text-white hover:bg-white/20"
+                  onClick={handleLogout}
+                  className="border-red-300 text-red-100 bg-red-500/20 hover:bg-red-500 hover:border-red-400 hover:text-white transition-all duration-200"
                 >
                   <LogOut className="w-4 h-4" />
                 </Button>
@@ -291,12 +299,9 @@ const ProfilePage = () => {
                     </Button>
 
                     <SubscriptionModal open={open} onOpenChange={setOpen} />
-                    <p className="text-gray-600 mb-4">
+                    <p className="text-gray-600 mt-4">
                       Trải nghiệm tất cả tính năng cao cấp
                     </p>
-                    <Button className="bg-gradient-to-r from-pink-500 to-violet-600 hover:from-pink-600 hover:to-violet-700">
-                      Mua Premium
-                    </Button>
                   </div>
                 </div>
               )}

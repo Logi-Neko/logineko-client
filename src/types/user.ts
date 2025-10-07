@@ -7,4 +7,5 @@ export interface User {
   premium?: boolean | null;
   totalStar: number;
   dateOfBirth?: string | null;
+  avatarUrl: string | null;
 }

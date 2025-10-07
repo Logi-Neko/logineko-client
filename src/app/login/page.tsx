@@ -13,6 +13,7 @@ import {
 import { Eye, EyeOff, User, Lock, LogIn } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useLoginMutation, useLoginGGMutation } from "@/queries/useAuth";
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
@@ -32,7 +33,6 @@ const LoginPage: React.FC = () => {
   const loginMutation = useLoginMutation();
   const loginGGMutation = useLoginGGMutation();
 
-  // Username/password login
   useEffect(() => {
     if (loginMutation.isSuccess && loginMutation.data?.data?.access_token) {
       const { access_token, refresh_token } = loginMutation.data.data;
@@ -64,7 +64,6 @@ const LoginPage: React.FC = () => {
     });
   };
 
-  // Google Login Success Handler
   const handleGoogleSuccess = (credentialResponse: any) => {
     console.log("Google credential response:", credentialResponse);
 
@@ -74,7 +73,7 @@ const LoginPage: React.FC = () => {
       console.log("ID Token:", id_token);
 
       loginGGMutation.mutate(id_token, {
-        onSuccess: (res) => {
+        onSuccess: (res: any) => {
           console.log("Google login success:", res);
           const { access_token, refresh_token } = res.data;
           localStorage.setItem("access_token", access_token);
@@ -85,7 +84,7 @@ const LoginPage: React.FC = () => {
           queryClient.invalidateQueries({ queryKey: ["account-me"] });
           router.push("/");
         },
-        onError: (err) => {
+        onError: (err: any) => {
           console.error("Login GG API failed:", err);
         },
       });
@@ -96,52 +95,55 @@ const LoginPage: React.FC = () => {
     console.error("Google login failed");
   };
 
+  const handleRegisterClick = () => {
+    router.push("/register");
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-500 to-violet-600 flex items-center justify-center p-4">
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-32 w-80 h-80 bg-white/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-32 w-80 h-80 bg-white/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
+        <div className="absolute top-20 left-20 w-72 h-72 bg-white/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-20 right-20 w-96 h-96 bg-white/5 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-white/5 rounded-full blur-3xl"></div>
       </div>
 
       <Card className="w-full max-w-md relative bg-white/95 backdrop-blur-sm shadow-2xl border-0">
-        <CardHeader className="text-center pb-6">
-          <div className="mx-auto w-24 h-24 flex items-center justify-center rounded-full overflow-hidden border-2 border-black ">
+        <CardHeader className="text-center pb-4">
+          <div className="mx-auto w-20 h-20 mb-4 bg-gradient-to-br from-pink-500 to-violet-600 rounded-full flex items-center justify-center shadow-lg overflow-hidden">
             <img
               src={logo.src}
               alt="Logo"
-              className="w-full h-full object-cover"
+              className="w-16 h-16 object-cover rounded-full"
             />
           </div>
-          <CardTitle className="text-3xl font-bold bg-gradient-to-br from-pink-600 to-violet-600 bg-clip-text text-transparent">
-            Đăng nhập
+
+          <CardTitle className="text-2xl font-bold bg-gradient-to-r from-pink-600 to-violet-600 bg-clip-text text-transparent mb-2">
+            Đăng Nhập
           </CardTitle>
-          <CardDescription className="text-gray-600 text-base">
+          <CardDescription className="text-gray-600">
             Nhập thông tin để truy cập hệ thống
           </CardDescription>
         </CardHeader>
 
-        <CardContent>
-          <div className="space-y-6">
-            {/* Error messages */}
-            {loginMutation.isError && (
-              <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-                <p className="text-red-600 text-sm">
-                  {loginMutation.error?.message ||
-                    "Đăng nhập thất bại. Vui lòng thử lại!"}
-                </p>
-              </div>
-            )}
+        <CardContent className="space-y-6">
+          {loginMutation.isError && (
+            <Alert className="border-red-200 bg-red-50">
+              <AlertDescription className="text-red-700">
+                {loginMutation.error?.message ||
+                  "Đăng nhập thất bại. Vui lòng thử lại!"}
+              </AlertDescription>
+            </Alert>
+          )}
 
-            {loginGGMutation.isError && (
-              <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-                <p className="text-red-600 text-sm">
-                  Google login failed: {loginGGMutation.error?.message}
-                </p>
-              </div>
-            )}
+          {loginGGMutation.isError && (
+            <Alert className="border-red-200 bg-red-50">
+              <AlertDescription className="text-red-700">
+                Đăng nhập Google thất bại: {loginGGMutation.error?.message}
+              </AlertDescription>
+            </Alert>
+          )}
 
-            {/* Username */}
+          <div className="space-y-4">
             <div className="space-y-2">
               <Label
                 htmlFor="username"
@@ -150,7 +152,7 @@ const LoginPage: React.FC = () => {
                 Tên đăng nhập
               </Label>
               <div className="relative">
-                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                 <Input
                   id="username"
                   type="text"
@@ -158,14 +160,12 @@ const LoginPage: React.FC = () => {
                   onChange={(e) => setUsername(e.target.value)}
                   onKeyPress={handleKeyPress}
                   placeholder="Nhập tên đăng nhập"
-                  className="pl-10 h-12 border-gray-200 focus:border-pink-400 focus:ring-pink-400 transition-all duration-200"
-                  required
+                  className="pl-10 h-11 border-gray-200 focus:border-pink-500 focus:ring-pink-500 transition-all duration-200"
                   disabled={loginMutation.isPending}
                 />
               </div>
             </div>
 
-            {/* Password */}
             <div className="space-y-2">
               <Label
                 htmlFor="password"
@@ -174,7 +174,7 @@ const LoginPage: React.FC = () => {
                 Mật khẩu
               </Label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                 <Input
                   id="password"
                   type={showPassword ? "text" : "password"}
@@ -182,67 +182,78 @@ const LoginPage: React.FC = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   onKeyPress={handleKeyPress}
                   placeholder="Nhập mật khẩu"
-                  className="pl-10 pr-10 h-12 border-gray-200 focus:border-pink-400 focus:ring-pink-400 transition-all duration-200"
-                  required
+                  className="pl-10 pr-10 h-11 border-gray-200 focus:border-pink-500 focus:ring-pink-500 transition-all duration-200"
                   disabled={loginMutation.isPending}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                  className="absolute right-3 top-3 h-4 w-4 text-gray-400 hover:text-gray-600 transition-colors"
                   disabled={loginMutation.isPending}
                 >
                   {showPassword ? (
-                    <EyeOff className="w-5 h-5" />
+                    <EyeOff className="h-4 w-4" />
                   ) : (
-                    <Eye className="w-5 h-5" />
+                    <Eye className="h-4 w-4" />
                   )}
                 </button>
               </div>
             </div>
 
-            {/* Login button */}
             <Button
               onClick={handleSubmit}
-              className="w-full h-12 cursor-pointer bg-gradient-to-r from-pink-500 to-violet-600 hover:from-pink-600 hover:to-violet-700 text-white font-semibold text-base shadow-lg hover:shadow-xl transform transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+              className="w-full h-11 bg-gradient-to-r from-pink-500 to-violet-600 hover:from-pink-600 hover:to-violet-700 text-white font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
               disabled={
                 loginMutation.isPending || !username.trim() || !password.trim()
               }
             >
               {loginMutation.isPending ? (
-                <div className="flex items-center space-x-2">
-                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                  <span>Đang đăng nhập...</span>
+                <div className="flex items-center justify-center">
+                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></div>
+                  Đang đăng nhập...
                 </div>
               ) : (
-                <div className="flex items-center space-x-2">
-                  <LogIn className="w-5 h-5" />
-                  <span>Đăng nhập</span>
+                <div className="flex items-center justify-center">
+                  <LogIn className="w-4 h-4 mr-2" />
+                  Đăng nhập
                 </div>
               )}
             </Button>
+          </div>
 
-            {/* Divider */}
-            <div className="flex items-center my-4">
-              <div className="flex-1 h-px bg-gray-300"></div>
-              <span className="px-3 text-sm text-gray-500">
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t border-gray-200" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-white px-2 text-gray-900">
                 hoặc đăng nhập với
               </span>
-              <div className="flex-1 h-px bg-gray-300"></div>
             </div>
+          </div>
 
-            {/* Google login */}
-            <div className="flex justify-center">
-              <GoogleLogin
-                onSuccess={handleGoogleSuccess}
-                onError={handleGoogleError}
-                theme="outline"
-                size="large"
-                text="continue_with"
-                width="100%"
-                logo_alignment="left"
-              />
-            </div>
+          <div className="flex justify-center">
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={handleGoogleError}
+              theme="outline"
+              size="large"
+              text="signin_with"
+              width="100%"
+              logo_alignment="left"
+            />
+          </div>
+
+          <div className="text-center border-t border-gray-100">
+            <p className="text-sm text-gray-600">
+              Chưa có tài khoản?{" "}
+              <button
+                onClick={handleRegisterClick}
+                className="text-pink-600 hover:text-pink-700 font-medium hover:underline transition-colors cursor-pointer"
+              >
+                Đăng ký ngay
+              </button>
+            </p>
           </div>
         </CardContent>
       </Card>

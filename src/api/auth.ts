@@ -1,6 +1,6 @@
 import { apiGet, apiPost } from "@/lib/api";
 import { ApiResponse } from "@/types/api";
-import { LoginRequest, LoginResponse } from "@/types/auth";
+import { LoginRequest, LoginResponse, RegisterRequest } from "@/types/auth";
 import { User } from "@/types/user";
 
 const authApiRequest = {
@@ -8,6 +8,8 @@ const authApiRequest = {
   login: (body: LoginRequest) => apiPost<LoginResponse>("login/exchange", body),
   loginGG: (idToken: string) =>
     apiPost<LoginResponse>(`login/google?id_token=${idToken}`),
+  register: (body: RegisterRequest) =>
+    apiPost<ApiResponse<User>>("register", body),
 };
 
 export default authApiRequest;

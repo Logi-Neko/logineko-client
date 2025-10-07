@@ -24,3 +24,10 @@ export interface ApiErrorResponse {
   message: string;
   error: string;
 }
+
+export interface RegisterRequest {
+  username: string;
+  password: string;
+  email: string;
+  fullName: string;
+}
