@@ -3,7 +3,7 @@ import axios, { AxiosRequestConfig, AxiosError } from "axios";
 import queryString from "query-string";
 
 const axiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_ENDPOINT_LOCAL,
+  baseURL: "http://localhost:8081/api/",
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",
