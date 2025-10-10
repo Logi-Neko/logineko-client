@@ -28,16 +28,10 @@ const LoginPage: React.FC = () => {
 
   const router = useRouter();
   const queryClient = useQueryClient();
-  const { isAuthenticated, setIsAuthenticated } = useContext(AuthContext);
+  const { setIsAuthenticated } = useContext(AuthContext);
 
   const loginMutation = useLoginMutation();
   const loginGGMutation = useLoginGGMutation();
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      router.push("/");
-    }
-  }, [isAuthenticated, router]);
 
   useEffect(() => {
     if (loginMutation.isSuccess && loginMutation.data?.data?.access_token) {
@@ -207,7 +201,7 @@ const LoginPage: React.FC = () => {
             </div>
 
             <Button
-              onClick={handleSubmit}
+              onClick={() => handleSubmit()}
               className="w-full h-11 bg-gradient-to-r from-pink-500 to-violet-600 hover:from-pink-600 hover:to-violet-700 text-white font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
               disabled={
                 loginMutation.isPending || !username.trim() || !password.trim()

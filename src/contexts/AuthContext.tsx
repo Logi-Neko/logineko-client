@@ -25,33 +25,18 @@ export const AuthContext =
   createContext<AuthContextInterface>(initialAppContext);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
-    if (typeof window !== "undefined") {
-      const token = localStorage.getItem("access_token");
-      return Boolean(token);
-    }
-    return false;
-  });
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(
+    initialAppContext.isAuthenticated
+  );
 
   const [profile, setProfileState] = useState<User | null>(
     initialAppContext.profile
   );
 
-  const { data, isSuccess, isError, refetch } = useAccountMe();
+  const { data, isSuccess, isError } = useAccountMe();
 
   useEffect(() => {
-    const token = localStorage.getItem("access_token");
-    if (token && !profile && !isError) {
-      setIsAuthenticated(true);
-      if (!data) {
-        refetch();
-      }
-    }
-  }, [profile, isError, data, refetch]);
-
-  useEffect(() => {
-    const token = localStorage.getItem("access_token");
-    if (token && isSuccess && data) {
+    if (isSuccess && data) {
       handleSetProfile(data.data);
     } else if (isError) {
       reset();
