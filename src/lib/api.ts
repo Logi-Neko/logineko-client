@@ -4,7 +4,7 @@ import queryString from "query-string";
 
 const axiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_ENDPOINT_PRODUCT,
-  timeout: 10000,
+  timeout: 100000,
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
