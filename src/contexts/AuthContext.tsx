@@ -36,7 +36,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { data, isSuccess, isError } = useAccountMe();
 
   useEffect(() => {
-    if (isSuccess && data) {
+    if (isSuccess && data.data) {
       handleSetProfile(data.data);
     } else if (isError) {
       reset();
@@ -50,11 +50,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const reset = () => {
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
     setIsAuthenticated(false);
     setProfileState(null);
     setProfileToLS(null);
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("refresh_token");
   };
 
   return (

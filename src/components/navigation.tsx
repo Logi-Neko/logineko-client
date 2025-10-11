@@ -105,32 +105,6 @@ export function Navigation() {
                 </Link>
               )}
             </div>
-            {/* 
-            <Button
-              onClick={() => setOpen(true)}
-              className="bg-gradient-primary hover:opacity-90 text-black rounded-playful px-6 py-2 font-semibold shadow-playful"
-            >
-              <Download className="w-4 h-4 mr-2" />
-              Tải ứng dụng
-            </Button>
-
-            <Dialog open={open} onOpenChange={setOpen}>
-              <DialogContent className="max-w-lg text-center border-none rounded-2xl bg-white shadow-2xl px-6 py-8">
-                <DialogHeader>
-                  <div className="flex justify-center mb-4">
-                    <Smile className="w-12 h-12 text-yellow-500 animate-bounce" />
-                  </div>
-                  <DialogTitle className="text-xl text-center font-bold text-pink-600">
-                    Sắp ra mắt!
-                  </DialogTitle>
-                  <DialogDescription className="text-gray-700 text-base mt-2">
-                    Ứng dụng sẽ được phát hành trong thời gian tới.
-                    <br />
-                    Cảm ơn bạn đã quan tâm! 💖
-                  </DialogDescription>
-                </DialogHeader>
-              </DialogContent>
-            </Dialog> */}
           </div>
 
           <div className="md:hidden">
@@ -151,73 +125,71 @@ export function Navigation() {
 
         {isOpen && (
           <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 bg-white rounded-lg mt-2 shadow-lg">
-              <Link
-                href="/"
-                className="block px-3 py-2 text-gray-700 hover:text-primary transition-colors font-medium"
-                onClick={() => setIsOpen(false)}
-              >
-                Trang chủ
-              </Link>
-              <Link
-                href="/features"
-                className="block px-3 py-2 text-gray-700 hover:text-primary transition-colors font-medium"
-                onClick={() => setIsOpen(false)}
-              >
-                Tính năng
-              </Link>
-              <Link
-                href="/shop"
-                className="block px-3 py-2 text-gray-700 hover:text-primary transition-colors font-medium"
-                onClick={() => setIsOpen(false)}
-              >
-                Cửa hàng
-              </Link>
-              <Link
-                href="/feedback"
-                className="block px-3 py-2 text-gray-700 hover:text-primary transition-colors font-medium"
-                onClick={() => setIsOpen(false)}
-              >
-                Đánh giá
-              </Link>
-              <Link
-                href="/admin"
-                className="block px-3 py-2 text-gray-700 hover:text-primary transition-colors font-medium"
-                onClick={() => setIsOpen(false)}
-              >
-                Quản trị
-              </Link>
+            <div className="absolute left-0 right-0 z-50 px-4 py-4 mt-2 bg-white/95 backdrop-blur-md shadow-2xl rounded-2xl mx-2 border border-gray-100 animate-fadeIn">
+              <nav className="space-y-2">
+                <Link
+                  href="/"
+                  className="block px-4 py-3 text-gray-800 font-semibold rounded-xl hover:bg-gradient-to-r hover:from-pink-100 hover:to-purple-100 hover:text-primary transition-all duration-300"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Trang chủ
+                </Link>
+                <Link
+                  href="/features"
+                  className="block px-4 py-3 text-gray-800 font-semibold rounded-xl hover:bg-gradient-to-r hover:from-pink-100 hover:to-purple-100 hover:text-primary transition-all duration-300"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Tính năng
+                </Link>
+                <Link
+                  href="/shop"
+                  className="block px-4 py-3 text-gray-800 font-semibold rounded-xl hover:bg-gradient-to-r hover:from-pink-100 hover:to-purple-100 hover:text-primary transition-all duration-300"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Cửa hàng
+                </Link>
+                <Link
+                  href="/feedback"
+                  className="block px-4 py-3 text-gray-800 font-semibold rounded-xl hover:bg-gradient-to-r hover:from-pink-100 hover:to-purple-100 hover:text-primary transition-all duration-300"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Đánh giá
+                </Link>
+              </nav>
+
+              <div className="border-t border-gray-200 my-3"></div>
 
               <div className="pt-2">
-                <div className="flex items-center justify-between w-full mb-2">
-                  <Link href="/cart">
-                    <Button variant="ghost" size="sm" className="relative">
-                      <ShoppingCart className="w-5 h-5" />
-                    </Button>
-                  </Link>
-                </div>
+                {isAuthenticated && profile ? (
+                  <div className="flex flex-col items-center gap-3">
+                    <Link
+                      href="/profile"
+                      className="flex items-center gap-2 text-gray-700 font-medium hover:text-pink-600 transition-all duration-200"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <User className="w-5 h-5 text-gray-500" />
+                      <span>{profile.fullName}</span>
+                    </Link>
 
-                <div className="border-t border-gray-200 pt-4 mb-4 space-y-2">
+                    <Button
+                      onClick={() => setOpen(true)}
+                      className="flex items-center justify-center w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:opacity-90 text-white rounded-2xl px-6 py-3 font-semibold shadow-lg transition-all duration-300 hover:shadow-xl"
+                    >
+                      <Crown className="w-4 h-4 mr-2" />
+                      Nâng cấp Premium
+                    </Button>
+
+                    <SubscriptionModal open={open} onOpenChange={setOpen} />
+                  </div>
+                ) : (
                   <Link
                     href="/login"
-                    className="block w-full text-center bg-gradient-primary hover:opacity-90 text-black rounded-playful px-4 py-2 font-semibold shadow-playful"
+                    className="block w-full text-center bg-gradient-to-r from-pink-400 to-purple-400 hover:opacity-90 text-white rounded-2xl px-5 py-3 font-semibold shadow-md transition-all duration-300 hover:shadow-lg"
                     onClick={() => setIsOpen(false)}
                   >
                     Đăng nhập
                   </Link>
-                  <Link
-                    href="/register"
-                    className="block w-full text-center border border-gray-300 text-gray-700 rounded-playful px-4 py-2 font-semibold hover:bg-gray-50"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    Đăng ký
-                  </Link>
-                </div>
-
-                <Button className="w-full bg-gradient-primary hover:opacity-90 text-black rounded-playful font-semibold">
-                  <Download className="w-4 h-4 mr-2" />
-                  Tải ứng dụng
-                </Button>
+                )}
               </div>
             </div>
           </div>

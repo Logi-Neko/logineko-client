@@ -255,7 +255,7 @@ const RegisterPage: React.FC = () => {
             <Button
               type="submit"
               disabled={registerMutation.isPending}
-              className="w-full bg-gradient-to-r from-pink-500 to-violet-600 hover:from-pink-600 hover:to-violet-700 text-white font-medium py-2.5 rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
+              className="w-full h-11 bg-gradient-to-r from-pink-500 to-violet-600 hover:from-pink-600 hover:to-violet-700 text-white font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
             >
               {registerMutation.isPending ? (
                 <div className="flex items-center justify-center">
@@ -273,7 +273,7 @@ const RegisterPage: React.FC = () => {
               Đã có tài khoản?{" "}
               <Link
                 href="/login"
-                className="text-gray-700 hover:text-primary transition-colors font-medium"
+                className="text-pink-600 hover:text-pink-700 font-medium hover:underline transition-colors cursor-pointer"
               >
                 Đăng nhập
               </Link>

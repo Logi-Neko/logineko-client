@@ -65,16 +65,11 @@ const LoginPage: React.FC = () => {
   };
 
   const handleGoogleSuccess = (credentialResponse: any) => {
-    console.log("Google credential response:", credentialResponse);
-
     const id_token = credentialResponse.credential;
 
     if (id_token) {
-      console.log("ID Token:", id_token);
-
       loginGGMutation.mutate(id_token, {
         onSuccess: (res: any) => {
-          console.log("Google login success:", res);
           const { access_token, refresh_token } = res.data;
           localStorage.setItem("access_token", access_token);
           if (refresh_token)
