@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import authApiRequest from "@/api/auth";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
@@ -25,7 +26,22 @@ export const useAccountMe = () => {
 
   return useQuery({
     queryKey: ["account-me", token],
-    queryFn: authApiRequest.me,
+    queryFn: async () => {
+      if (!token) throw new Error("No token found");
+
+      try {
+        const res = await authApiRequest.me();
+        return res;
+      } catch (error: any) {
+        if (error?.response?.status === 401) {
+          localStorage.removeItem("access_token");
+          localStorage.removeItem("refresh_token");
+          localStorage.removeItem("profile");
+        }
+        throw error;
+      }
+    },
     enabled: !!token,
+    retry: false,
   });
 };
