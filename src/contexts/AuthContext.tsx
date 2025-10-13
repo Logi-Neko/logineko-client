@@ -3,7 +3,7 @@
 import { User } from "@/types/user";
 import { createContext, useEffect, useState } from "react";
 import { useAccountMe } from "@/queries/useAuth";
-import { setProfileToLS } from "@/lib/utils";
+import { getProfileFromLS, setProfileToLS } from "@/lib/utils";
 
 interface AuthContextInterface {
   isAuthenticated: boolean;
@@ -14,9 +14,9 @@ interface AuthContextInterface {
 }
 
 const initialAppContext: AuthContextInterface = {
-  isAuthenticated: false,
+  isAuthenticated: Boolean(getProfileFromLS()),
   setIsAuthenticated: () => null,
-  profile: null,
+  profile: getProfileFromLS(),
   setProfile: () => null,
   reset: () => null,
 };
