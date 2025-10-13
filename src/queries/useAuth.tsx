@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
 import authApiRequest from "@/api/auth";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
