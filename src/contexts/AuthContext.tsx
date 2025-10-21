@@ -38,7 +38,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (isSuccess && data.data) {
       handleSetProfile(data.data);
-    } else if (isError) {
+    }
+    if (isError) {
       reset();
     }
   }, [data, isSuccess, isError]);

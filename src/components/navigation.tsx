@@ -4,7 +4,7 @@
 import Link from "next/link";
 import { useState, useEffect, useRef, useContext } from "react";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Download, ShoppingCart, User, Crown } from "lucide-react";
+import { Menu, X, User, Crown, LogOut, Settings } from "lucide-react";
 import { AuthContext } from "@/contexts/AuthContext";
 import SubscriptionModal from "./subscription-modal";
 import logo from "../assets/LOGO.jpg";
@@ -14,7 +14,7 @@ export function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
-  const { isAuthenticated, profile } = useContext(AuthContext);
+  const { isAuthenticated, profile, reset } = useContext(AuthContext);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -31,6 +31,12 @@ export function Navigation() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  const handleLogout = () => {
+    reset();
+    setUserMenuOpen(false);
+    setIsOpen(false);
+  };
 
   return (
     <nav className="bg-white/80 backdrop-blur-md border-b border-pink-100 sticky top-0 z-50">
@@ -52,39 +58,20 @@ export function Navigation() {
               href="/"
               className="text-gray-700 hover:text-primary transition-colors font-medium"
             >
-              Trang chủ
-            </Link>
-            <Link
-              href="/features"
-              className="text-gray-700 hover:text-primary transition-colors font-medium"
-            >
-              Tính năng
+              TRANG CHỦ
             </Link>
             <Link
               href="/shop"
               className="text-gray-700 hover:text-primary transition-colors font-medium"
             >
-              Cửa hàng
-            </Link>
-            <Link
-              href="/feedback"
-              className="text-gray-700 hover:text-primary transition-colors font-medium"
-            >
-              Đánh giá
+              CỬA HÀNG
             </Link>
           </div>
 
           <div className="hidden md:flex items-center space-x-4">
             <div>
               {isAuthenticated && profile ? (
-                <div className="flex items-center space-x-2 p-2">
-                  <Link
-                    href="/profile"
-                    className="flex items-center space-x-2 p-2 text-gray-600 hover:text-pink-600 transition-colors"
-                  >
-                    <User className="w-5 h-5" />
-                    <span>{profile.fullName}</span>
-                  </Link>
+                <div className="flex items-center space-x-2" ref={userMenuRef}>
                   <Button
                     onClick={() => setOpen(true)}
                     className="bg-gradient-to-r from-purple-500 to-pink-500 hover:opacity-90 text-white rounded-xl px-6 py-3 cursor-pointer font-semibold shadow-lg transition-all duration-300 hover:shadow-xl"
@@ -92,6 +79,66 @@ export function Navigation() {
                     <Crown className="w-4 h-4 mr-2" />
                     Nâng cấp Premium
                   </Button>
+
+                  <div className="relative">
+                    <button
+                      onClick={() => setUserMenuOpen(!userMenuOpen)}
+                      className="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-gray-100 transition-colors duration-200"
+                    >
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-400 to-pink-400 flex items-center justify-center text-white font-semibold text-sm">
+                        {profile.fullName?.charAt(0).toUpperCase()}
+                      </div>
+                      <span className="text-gray-700 font-medium text-sm hidden sm:inline">
+                        {profile.fullName}
+                      </span>
+                    </button>
+
+                    {userMenuOpen && (
+                      <div className="absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+                        <div className="px-6 py-4 bg-gradient-to-r from-purple-50 to-pink-50 border-b border-gray-100">
+                          <div className="w-12 h-12 rounded-full bg-gradient-to-r from-purple-400 to-pink-400 flex items-center justify-center text-white font-bold text-lg mb-3">
+                            {profile.fullName?.charAt(0).toUpperCase()}
+                          </div>
+                          <p className="font-semibold text-gray-900">
+                            {profile.fullName}
+                          </p>
+                          <p className="text-sm text-gray-600 mt-1">
+                            {profile.email}
+                          </p>
+                        </div>
+
+                        <div className="py-2">
+                          <Link
+                            href="/profile"
+                            className="flex items-center gap-3 px-6 py-3 text-gray-700 hover:bg-gray-50 transition-colors duration-150"
+                            onClick={() => setUserMenuOpen(false)}
+                          >
+                            <User className="w-4 h-4 text-gray-400" />
+                            <span className="font-medium">Xem hồ sơ</span>
+                          </Link>
+
+                          <Link
+                            href="/settings"
+                            className="flex items-center gap-3 px-6 py-3 text-gray-700 hover:bg-gray-50 transition-colors duration-150"
+                            onClick={() => setUserMenuOpen(false)}
+                          >
+                            <Settings className="w-4 h-4 text-gray-400" />
+                            <span className="font-medium">Cài đặt</span>
+                          </Link>
+
+                          <div className="border-t border-gray-100 my-2"></div>
+
+                          <button
+                            onClick={handleLogout}
+                            className="w-full flex items-center gap-3 px-6 py-3 text-red-600 hover:bg-red-50 transition-colors duration-150"
+                          >
+                            <LogOut className="w-4 h-4" />
+                            <span className="font-medium">Đăng xuất</span>
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
 
                   <SubscriptionModal open={open} onOpenChange={setOpen} />
                 </div>
@@ -101,7 +148,7 @@ export function Navigation() {
                   className="flex items-center space-x-2 p-2 text-gray-600 hover:text-pink-600 transition-colors"
                 >
                   <User className="w-5 h-5" />
-                  <span className="hidden sm:inline">Đăng nhập</span>
+                  <span className="hidden sm:inline">ĐĂNG NHẬP</span>
                 </Link>
               )}
             </div>
@@ -130,30 +177,15 @@ export function Navigation() {
                 <Link
                   href="/"
                   className="block px-4 py-3 text-gray-800 font-semibold rounded-xl hover:bg-gradient-to-r hover:from-pink-100 hover:to-purple-100 hover:text-primary transition-all duration-300"
-                  onClick={() => setIsOpen(false)}
                 >
-                  Trang chủ
-                </Link>
-                <Link
-                  href="/features"
-                  className="block px-4 py-3 text-gray-800 font-semibold rounded-xl hover:bg-gradient-to-r hover:from-pink-100 hover:to-purple-100 hover:text-primary transition-all duration-300"
-                  onClick={() => setIsOpen(false)}
-                >
-                  Tính năng
+                  TRANG CHỦ
                 </Link>
                 <Link
                   href="/shop"
                   className="block px-4 py-3 text-gray-800 font-semibold rounded-xl hover:bg-gradient-to-r hover:from-pink-100 hover:to-purple-100 hover:text-primary transition-all duration-300"
                   onClick={() => setIsOpen(false)}
                 >
-                  Cửa hàng
-                </Link>
-                <Link
-                  href="/feedback"
-                  className="block px-4 py-3 text-gray-800 font-semibold rounded-xl hover:bg-gradient-to-r hover:from-pink-100 hover:to-purple-100 hover:text-primary transition-all duration-300"
-                  onClick={() => setIsOpen(false)}
-                >
-                  Đánh giá
+                  CỬA HÀNG
                 </Link>
               </nav>
 
@@ -162,13 +194,34 @@ export function Navigation() {
               <div className="pt-2">
                 {isAuthenticated && profile ? (
                   <div className="flex flex-col items-center gap-3">
+                    <div className="w-full bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl p-4 text-center border border-gray-100">
+                      <div className="w-12 h-12 rounded-full bg-gradient-to-r from-purple-400 to-pink-400 flex items-center justify-center text-white font-bold text-lg mx-auto mb-2">
+                        {profile.fullName?.charAt(0).toUpperCase()}
+                      </div>
+                      <p className="font-semibold text-gray-900">
+                        {profile.fullName}
+                      </p>
+                      <p className="text-xs text-gray-600 mt-1">
+                        {profile.email}
+                      </p>
+                    </div>
+
                     <Link
                       href="/profile"
-                      className="flex items-center gap-2 text-gray-700 font-medium hover:text-pink-600 transition-all duration-200"
+                      className="flex items-center justify-center gap-2 w-full text-gray-700 font-medium hover:text-primary transition-all duration-200 py-3 rounded-xl hover:bg-gray-50"
                       onClick={() => setIsOpen(false)}
                     >
-                      <User className="w-5 h-5 text-gray-500" />
-                      <span>{profile.fullName}</span>
+                      <User className="w-5 h-5" />
+                      <span>Xem hồ sơ</span>
+                    </Link>
+
+                    <Link
+                      href="/settings"
+                      className="flex items-center justify-center gap-2 w-full text-gray-700 font-medium hover:text-primary transition-all duration-200 py-3 rounded-xl hover:bg-gray-50"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <Settings className="w-5 h-5" />
+                      <span>Cài đặt</span>
                     </Link>
 
                     <Button
@@ -179,6 +232,14 @@ export function Navigation() {
                       Nâng cấp Premium
                     </Button>
 
+                    <button
+                      onClick={handleLogout}
+                      className="flex items-center justify-center gap-2 w-full text-red-600 font-medium py-3 rounded-xl hover:bg-red-50 transition-all duration-200"
+                    >
+                      <LogOut className="w-5 h-5" />
+                      <span>Đăng xuất</span>
+                    </button>
+
                     <SubscriptionModal open={open} onOpenChange={setOpen} />
                   </div>
                 ) : (
@@ -187,7 +248,7 @@ export function Navigation() {
                     className="block w-full text-center bg-gradient-to-r from-pink-400 to-purple-400 hover:opacity-90 text-white rounded-2xl px-5 py-3 font-semibold shadow-md transition-all duration-300 hover:shadow-lg"
                     onClick={() => setIsOpen(false)}
                   >
-                    Đăng nhập
+                    ĐĂNG NHẬP
                   </Link>
                 )}
               </div>
