@@ -96,11 +96,9 @@ export default function SubscriptionModal({
 
       if (subscriptionResponse) {
         const subscriptionId = subscriptionResponse.data.id;
-        const random = Math.floor(Math.random() * 1000);
 
-        const orderCode = Number(`${subscriptionId}${random}`);
         const paymentRequest: PaymentRequest = {
-          orderCode: orderCode,
+          orderCode: subscriptionId,
           amount: 2000,
           description: `Thanh toán gói ${subscriptionResponse.data.type}`,
         };
