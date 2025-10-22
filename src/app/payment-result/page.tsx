@@ -12,6 +12,7 @@ import {
   BookOpen,
   Play,
   Star,
+  Link,
 } from "lucide-react";
 
 interface PaymentData {
@@ -195,17 +196,13 @@ const PaymentResultContent = () => {
             </div>
 
             <div className="space-y-3">
-              {isSuccess && paymentData.status === "PAID" && (
-                <button className="w-full bg-green-600 hover:bg-green-700 text-white py-4 rounded-2xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2 shadow-lg">
-                  <Play className="w-5 h-5" />
-                  Bắt đầu học Premium ngay
-                </button>
-              )}
-
-              <button className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 flex items-center justify-center gap-2">
+              <Link
+                href="/"
+                className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 flex items-center justify-center gap-2"
+              >
                 <ArrowLeft className="w-5 h-5" />
                 Về trang chủ Logineko
-              </button>
+              </Link>
             </div>
           </div>
         </div>
