@@ -195,30 +195,10 @@ const PaymentResultContent = () => {
             </div>
 
             <div className="space-y-3">
-              {isSuccess ? (
-                <button
-                  className={`w-full ${
-                    paymentData.status === "PAID"
-                      ? "bg-green-600 hover:bg-green-700"
-                      : paymentData.status === "CANCELLED"
-                      ? "bg-red-600 hover:bg-red-700"
-                      : "bg-orange-600 hover:bg-orange-700"
-                  } text-white py-4 rounded-2xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2 shadow-lg`}
-                >
+              {isSuccess && paymentData.status === "PAID" && (
+                <button className="w-full bg-green-600 hover:bg-green-700 text-white py-4 rounded-2xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2 shadow-lg">
                   <Play className="w-5 h-5" />
                   Bắt đầu học Premium ngay
-                </button>
-              ) : (
-                <button
-                  className={`w-full ${
-                    paymentData.status === "PAID"
-                      ? "bg-green-600 hover:bg-green-700"
-                      : paymentData.status === "CANCELLED"
-                      ? "bg-red-600 hover:bg-red-700"
-                      : "bg-orange-600 hover:bg-orange-700"
-                  } text-white py-4 rounded-2xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg`}
-                >
-                  Thử lại thanh toán
                 </button>
               )}
 
