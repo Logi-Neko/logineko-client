@@ -12,8 +12,8 @@ import {
   BookOpen,
   Play,
   Star,
-  Link,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface PaymentData {
   status: string;
@@ -24,6 +24,7 @@ interface PaymentData {
 }
 
 const PaymentResultContent = () => {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const [paymentData, setPaymentData] = useState<PaymentData>({
     status: "",
@@ -196,13 +197,13 @@ const PaymentResultContent = () => {
             </div>
 
             <div className="space-y-3">
-              <Link
-                href="/"
-                className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 flex items-center justify-center gap-2"
+              <button
+                onClick={() => router.push("/")}
+                className="w-full cursor-pointer bg-green-600 hover:bg-green-700 text-white py-3 rounded-2xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2 shadow-lg"
               >
                 <ArrowLeft className="w-5 h-5" />
                 Về trang chủ Logineko
-              </Link>
+              </button>
             </div>
           </div>
         </div>
