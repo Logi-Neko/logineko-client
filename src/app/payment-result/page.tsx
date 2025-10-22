@@ -34,7 +34,7 @@ const PaymentResultContent = () => {
 
   useEffect(() => {
     setPaymentData({
-      status: searchParams.get("status") || "paid",
+      status: searchParams.get("status") || "PAID",
       code: searchParams.get("code") || "00",
       id: searchParams.get("id") || "1",
       orderCode: searchParams.get("orderCode") || "2",
@@ -42,14 +42,14 @@ const PaymentResultContent = () => {
     });
   }, [searchParams]);
 
-  const isSuccess = paymentData.status.toLowerCase() === "paid";
+  const isSuccess = paymentData.status.toLowerCase() === "PAID";
 
   return (
     <div
       className={`min-h-screen ${
-        paymentData.status === "paid"
+        paymentData.status === "PAID"
           ? "bg-gradient-to-br from-green-50 via-emerald-50 to-teal-100"
-          : paymentData.status === "failed"
+          : paymentData.status === "CANCELLED"
           ? "bg-gradient-to-br from-red-50 via-rose-50 to-pink-100"
           : "bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-100"
       } relative overflow-hidden`}
@@ -57,9 +57,9 @@ const PaymentResultContent = () => {
       <div className="absolute inset-0 overflow-hidden">
         <div
           className={`absolute top-20 left-10 ${
-            paymentData.status === "paid"
+            paymentData.status === "PAID"
               ? "text-green-200"
-              : paymentData.status === "failed"
+              : paymentData.status === "CANCELLED"
               ? "text-red-200"
               : "text-orange-200"
           } opacity-20 animate-pulse`}
@@ -68,9 +68,9 @@ const PaymentResultContent = () => {
         </div>
         <div
           className={`absolute top-40 right-20 ${
-            paymentData.status === "paid"
+            paymentData.status === "PAID"
               ? "text-green-200"
-              : paymentData.status === "failed"
+              : paymentData.status === "CANCELLED"
               ? "text-red-200"
               : "text-orange-200"
           } opacity-15 animate-bounce`}
@@ -79,9 +79,9 @@ const PaymentResultContent = () => {
         </div>
         <div
           className={`absolute bottom-20 left-1/4 ${
-            paymentData.status === "paid"
+            paymentData.status === "PAID"
               ? "text-green-200"
-              : paymentData.status === "failed"
+              : paymentData.status === "CANCELLED"
               ? "text-red-200"
               : "text-orange-200"
           } opacity-10`}
@@ -90,9 +90,9 @@ const PaymentResultContent = () => {
         </div>
         <div
           className={`absolute top-60 left-1/3 ${
-            paymentData.status === "paid"
+            paymentData.status === "PAID"
               ? "text-green-200"
-              : paymentData.status === "failed"
+              : paymentData.status === "CANCELLED"
               ? "text-red-200"
               : "text-orange-200"
           } opacity-20 animate-pulse`}
@@ -101,9 +101,9 @@ const PaymentResultContent = () => {
         </div>
         <div
           className={`absolute bottom-40 right-1/4 ${
-            paymentData.status === "paid"
+            paymentData.status === "PAID"
               ? "text-green-200"
-              : paymentData.status === "failed"
+              : paymentData.status === "CANCELLED"
               ? "text-red-200"
               : "text-orange-200"
           } opacity-15`}
@@ -117,9 +117,9 @@ const PaymentResultContent = () => {
           <div className="bg-white/90 backdrop-blur-sm rounded-3xl shadow-2xl p-8 border border-white/50">
             <div className="text-center mb-8">
               <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gray-50 mb-6 shadow-lg">
-                {paymentData.status === "paid" ? (
+                {paymentData.status === "PAID" ? (
                   <CheckCircle className="w-12 h-12 text-green-600" />
-                ) : paymentData.status === "failed" ? (
+                ) : paymentData.status === "CANCELLED" ? (
                   <XCircle className="w-12 h-12 text-red-600" />
                 ) : (
                   <AlertCircle className="w-12 h-12 text-orange-600" />
@@ -127,25 +127,25 @@ const PaymentResultContent = () => {
               </div>
 
               <h2 className="text-2xl font-bold text-gray-800 mb-3">
-                {paymentData.status === "paid"
+                {paymentData.status === "PAID"
                   ? "Thanh toán thành công! 🎉"
-                  : paymentData.status === "failed"
+                  : paymentData.status === "CANCELLED"
                   ? "Thanh toán thất bại"
                   : "Thanh toán đã bị hủy"}
               </h2>
 
               <p className="text-lg text-gray-600 mb-2">
-                {paymentData.status === "paid"
+                {paymentData.status === "PAID"
                   ? "Chúc mừng! Gói Premium đã được kích hoạt"
-                  : paymentData.status === "failed"
+                  : paymentData.status === "CANCELLED"
                   ? "Rất tiếc, có lỗi xảy ra trong quá trình thanh toán"
                   : "Giao dịch đã được hủy bỏ"}
               </p>
 
               <p className="text-gray-500 leading-relaxed">
-                {paymentData.status === "paid"
+                {paymentData.status === "PAID"
                   ? "Bé đã chính thức trở thành thành viên Premium của Logineko!"
-                  : paymentData.status === "failed"
+                  : paymentData.status === "CANCELLED"
                   ? "Đừng lo lắng! Hãy thử lại hoặc chọn phương thức thanh toán khác."
                   : "Bé vẫn có thể quay lại và tiếp tục thanh toán để mở khóa gói Premium bất cứ lúc nào!"}
               </p>
@@ -177,16 +177,16 @@ const PaymentResultContent = () => {
                   <span className="text-gray-600">Trạng thái:</span>
                   <span
                     className={`font-medium ${
-                      paymentData.status === "paid"
+                      paymentData.status === "PAID"
                         ? "text-green-600"
-                        : paymentData.status === "failed"
+                        : paymentData.status === "CANCELLED"
                         ? "text-red-600"
                         : "text-orange-600"
                     } flex items-center gap-1`}
                   >
                     {paymentData.status === "cancelled"
                       ? "❌ Đã hủy"
-                      : paymentData.status === "paid"
+                      : paymentData.status === "PAID"
                       ? "✅ Thành công"
                       : "❌ Thất bại"}
                   </span>
@@ -198,9 +198,9 @@ const PaymentResultContent = () => {
               {isSuccess ? (
                 <button
                   className={`w-full ${
-                    paymentData.status === "paid"
+                    paymentData.status === "PAID"
                       ? "bg-green-600 hover:bg-green-700"
-                      : paymentData.status === "failed"
+                      : paymentData.status === "CANCELLED"
                       ? "bg-red-600 hover:bg-red-700"
                       : "bg-orange-600 hover:bg-orange-700"
                   } text-white py-4 rounded-2xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2 shadow-lg`}
@@ -211,9 +211,9 @@ const PaymentResultContent = () => {
               ) : (
                 <button
                   className={`w-full ${
-                    paymentData.status === "paid"
+                    paymentData.status === "PAID"
                       ? "bg-green-600 hover:bg-green-700"
-                      : paymentData.status === "failed"
+                      : paymentData.status === "CANCELLED"
                       ? "bg-red-600 hover:bg-red-700"
                       : "bg-orange-600 hover:bg-orange-700"
                   } text-white py-4 rounded-2xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg`}
