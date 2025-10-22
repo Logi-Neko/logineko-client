@@ -25,8 +25,8 @@ interface PaymentData {
 const PaymentResultContent = () => {
   const searchParams = useSearchParams();
   const [paymentData, setPaymentData] = useState<PaymentData>({
-    status: "cancelled",
-    code: "00",
+    status: "",
+    code: "",
     id: "",
     orderCode: "",
     cancel: true,
@@ -34,7 +34,7 @@ const PaymentResultContent = () => {
 
   useEffect(() => {
     setPaymentData({
-      status: searchParams.get("status") || "success",
+      status: searchParams.get("status") || "paid",
       code: searchParams.get("code") || "00",
       id: searchParams.get("id") || "1",
       orderCode: searchParams.get("orderCode") || "2",
@@ -42,12 +42,12 @@ const PaymentResultContent = () => {
     });
   }, [searchParams]);
 
-  const isSuccess = paymentData.status.toLowerCase() === "success";
+  const isSuccess = paymentData.status.toLowerCase() === "paid";
 
   return (
     <div
       className={`min-h-screen ${
-        paymentData.status === "success"
+        paymentData.status === "paid"
           ? "bg-gradient-to-br from-green-50 via-emerald-50 to-teal-100"
           : paymentData.status === "failed"
           ? "bg-gradient-to-br from-red-50 via-rose-50 to-pink-100"
@@ -57,7 +57,7 @@ const PaymentResultContent = () => {
       <div className="absolute inset-0 overflow-hidden">
         <div
           className={`absolute top-20 left-10 ${
-            paymentData.status === "success"
+            paymentData.status === "paid"
               ? "text-green-200"
               : paymentData.status === "failed"
               ? "text-red-200"
@@ -68,7 +68,7 @@ const PaymentResultContent = () => {
         </div>
         <div
           className={`absolute top-40 right-20 ${
-            paymentData.status === "success"
+            paymentData.status === "paid"
               ? "text-green-200"
               : paymentData.status === "failed"
               ? "text-red-200"
@@ -79,7 +79,7 @@ const PaymentResultContent = () => {
         </div>
         <div
           className={`absolute bottom-20 left-1/4 ${
-            paymentData.status === "success"
+            paymentData.status === "paid"
               ? "text-green-200"
               : paymentData.status === "failed"
               ? "text-red-200"
@@ -90,7 +90,7 @@ const PaymentResultContent = () => {
         </div>
         <div
           className={`absolute top-60 left-1/3 ${
-            paymentData.status === "success"
+            paymentData.status === "paid"
               ? "text-green-200"
               : paymentData.status === "failed"
               ? "text-red-200"
@@ -101,7 +101,7 @@ const PaymentResultContent = () => {
         </div>
         <div
           className={`absolute bottom-40 right-1/4 ${
-            paymentData.status === "success"
+            paymentData.status === "paid"
               ? "text-green-200"
               : paymentData.status === "failed"
               ? "text-red-200"
@@ -117,7 +117,7 @@ const PaymentResultContent = () => {
           <div className="bg-white/90 backdrop-blur-sm rounded-3xl shadow-2xl p-8 border border-white/50">
             <div className="text-center mb-8">
               <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gray-50 mb-6 shadow-lg">
-                {paymentData.status === "success" ? (
+                {paymentData.status === "paid" ? (
                   <CheckCircle className="w-12 h-12 text-green-600" />
                 ) : paymentData.status === "failed" ? (
                   <XCircle className="w-12 h-12 text-red-600" />
@@ -127,7 +127,7 @@ const PaymentResultContent = () => {
               </div>
 
               <h2 className="text-2xl font-bold text-gray-800 mb-3">
-                {paymentData.status === "success"
+                {paymentData.status === "paid"
                   ? "Thanh toán thành công! 🎉"
                   : paymentData.status === "failed"
                   ? "Thanh toán thất bại"
@@ -135,7 +135,7 @@ const PaymentResultContent = () => {
               </h2>
 
               <p className="text-lg text-gray-600 mb-2">
-                {paymentData.status === "success"
+                {paymentData.status === "paid"
                   ? "Chúc mừng! Gói Premium đã được kích hoạt"
                   : paymentData.status === "failed"
                   ? "Rất tiếc, có lỗi xảy ra trong quá trình thanh toán"
@@ -143,7 +143,7 @@ const PaymentResultContent = () => {
               </p>
 
               <p className="text-gray-500 leading-relaxed">
-                {paymentData.status === "success"
+                {paymentData.status === "paid"
                   ? "Bé đã chính thức trở thành thành viên Premium của Logineko!"
                   : paymentData.status === "failed"
                   ? "Đừng lo lắng! Hãy thử lại hoặc chọn phương thức thanh toán khác."
@@ -177,7 +177,7 @@ const PaymentResultContent = () => {
                   <span className="text-gray-600">Trạng thái:</span>
                   <span
                     className={`font-medium ${
-                      paymentData.status === "success"
+                      paymentData.status === "paid"
                         ? "text-green-600"
                         : paymentData.status === "failed"
                         ? "text-red-600"
@@ -186,7 +186,7 @@ const PaymentResultContent = () => {
                   >
                     {paymentData.status === "cancelled"
                       ? "❌ Đã hủy"
-                      : paymentData.status === "success"
+                      : paymentData.status === "paid"
                       ? "✅ Thành công"
                       : "❌ Thất bại"}
                   </span>
@@ -198,7 +198,7 @@ const PaymentResultContent = () => {
               {isSuccess ? (
                 <button
                   className={`w-full ${
-                    paymentData.status === "success"
+                    paymentData.status === "paid"
                       ? "bg-green-600 hover:bg-green-700"
                       : paymentData.status === "failed"
                       ? "bg-red-600 hover:bg-red-700"
@@ -211,7 +211,7 @@ const PaymentResultContent = () => {
               ) : (
                 <button
                   className={`w-full ${
-                    paymentData.status === "success"
+                    paymentData.status === "paid"
                       ? "bg-green-600 hover:bg-green-700"
                       : paymentData.status === "failed"
                       ? "bg-red-600 hover:bg-red-700"
