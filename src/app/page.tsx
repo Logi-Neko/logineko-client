@@ -113,24 +113,24 @@ const mainFeatures = [
 
 const testimonials = [
   {
-    name: "TS. Sarah Williams",
-    role: "Chuyên Gia Phát Triển Trẻ Em",
+    name: "TS. Quang Minh",
+    role: "Chuyên gia phát triển trẻ em",
     quote:
       "LogiNeko cân bằng hoàn hảo giữa giáo dục và giải trí. Trẻ em học mà không cảm thấy bị ép buộc!",
     rating: 5,
   },
   {
-    name: "Hiệu Trưởng Mark Thompson",
-    role: "Trường Tiểu Học Hope Hill",
+    name: "GV. Nguyễn Hiếu",
+    role: "Giảng viên Trường Tiểu học",
     quote:
       "Chúng tôi luôn giới thiệu LogiNeko đến các bậc phụ huynh. Một công cụ hỗ trợ học tập tuyệt vời!",
     rating: 5,
   },
   {
-    name: "Phụ huynh Jennifer Chen",
+    name: "Phụ huynh Cẩm Anh",
     role: "Giáo dục tại nhà",
     quote:
-      "Ứng dụng này đã thay đổi hoàn toàn lịch học ở nhà và trên trường. Các con tôi mong đợi giờ học mới ngày!",
+      "Ứng dụng này đã thay đổi hoàn toàn lịch học ở nhà và trên trường. Các con tôi luôn mong đợi giờ học mỗi ngày!",
     rating: 5,
   },
 ];
