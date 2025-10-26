@@ -99,7 +99,7 @@ export default function SubscriptionModal({
 
         const paymentRequest: PaymentRequest = {
           orderCode: subscriptionId,
-          amount: 2000,
+          amount: subscriptionResponse.data.price,
           description: `Thanh toán gói ${subscriptionResponse.data.type}`,
         };
         const paymentResponse = await paymentMutation.mutateAsync(
