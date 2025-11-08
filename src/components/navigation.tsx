@@ -61,6 +61,12 @@ export function Navigation() {
               TRANG CHỦ
             </Link>
             <Link
+              href="/courses"
+              className="text-gray-700 hover:text-primary transition-colors font-medium"
+            >
+              KHÓA HỌC
+            </Link>
+            <Link
               href="/shop"
               className="text-gray-700 hover:text-primary transition-colors font-medium"
             >
@@ -211,8 +217,16 @@ export function Navigation() {
                 <Link
                   href="/"
                   className="block px-4 py-3 text-gray-800 font-semibold rounded-xl hover:bg-gradient-to-r hover:from-pink-100 hover:to-purple-100 hover:text-primary transition-all duration-300"
+                  onClick={() => setIsOpen(false)}
                 >
                   TRANG CHỦ
+                </Link>
+                <Link
+                  href="/courses"
+                  className="block px-4 py-3 text-gray-800 font-semibold rounded-xl hover:bg-gradient-to-r hover:from-pink-100 hover:to-purple-100 hover:text-primary transition-all duration-300"
+                  onClick={() => setIsOpen(false)}
+                >
+                  KHÓA HỌC
                 </Link>
                 <Link
                   href="/shop"

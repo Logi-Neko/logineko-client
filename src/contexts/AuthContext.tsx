@@ -1,7 +1,7 @@
 "use client";
 
 import { User } from "@/types/user";
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { useAccountMe } from "@/queries/useAuth";
 import { getProfileFromLS, setProfileToLS } from "@/lib/utils";
 
@@ -72,3 +72,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     </AuthContext.Provider>
   );
 }
+
+// Custom hook to use the AuthContext
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
+};

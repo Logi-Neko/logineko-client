@@ -1,0 +1,96 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import axios, { AxiosRequestConfig, AxiosError } from "axios";
+import queryString from "query-string";
+
+const learningAxiosInstance = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_LEARNING_API_ENDPOINT,
+  timeout: 100000,
+  headers: {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+  },
+  paramsSerializer: (params) => queryString.stringify(params),
+  withCredentials: false,
+});
+
+learningAxiosInstance.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("access_token");
+    if (token && config.headers) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
+learningAxiosInstance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("refresh_token");
+      localStorage.removeItem("profile");
+      window.location.href = "/login";
+    }
+    return Promise.reject(error);
+  }
+);
+
+interface IRequest {
+  url: string;
+  method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+  body?: Record<string, any>;
+  queryParams?: Record<string, any>;
+  headers?: Record<string, any>;
+  config?: AxiosRequestConfig;
+}
+
+interface IErrorResponse {
+  statusCode: number;
+  message: string;
+  error: string;
+}
+
+export const sendLearningRequest = async <T>(props: IRequest): Promise<T> => {
+  const { url, method, body, queryParams, headers = {}, config = {} } = props;
+
+  const requestConfig: AxiosRequestConfig = {
+    url,
+    method,
+    headers,
+    data: body,
+    params: queryParams,
+    ...config,
+  };
+
+  try {
+    const response = await learningAxiosInstance<T>(requestConfig);
+    return response.data;
+  } catch (error) {
+    const axiosError = error as AxiosError<any>;
+
+    const errorResponse: IErrorResponse = {
+      statusCode: axiosError.response?.status || 500,
+      message:
+        axiosError.response?.data?.message ||
+        axiosError.message ||
+        "Có lỗi xảy ra",
+      error: axiosError.response?.data?.error || "Network Error",
+    };
+
+    throw errorResponse;
+  }
+};
+
+export const learningApiGet = <T>(url: string, params?: Record<string, any>) =>
+  sendLearningRequest<T>({ url, method: "GET", queryParams: params });
+
+export const learningApiPost = <T>(url: string, data?: Record<string, any>) =>
+  sendLearningRequest<T>({ url, method: "POST", body: data });
+
+export const learningApiPut = <T>(url: string, data?: Record<string, any>) =>
+  sendLearningRequest<T>({ url, method: "PUT", body: data });
+
+export const learningApiDelete = <T>(url: string) =>
+  sendLearningRequest<T>({ url, method: "DELETE" });
