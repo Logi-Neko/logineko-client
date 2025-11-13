@@ -298,15 +298,14 @@ const LoginPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex justify-center">
-            <div className="w-full transform hover:scale-105 transition-transform duration-200">
+          <div className="flex justify-center items-center">
+            <div className=" transform hover:scale-105 transition-transform duration-200">
               <GoogleLogin
                 onSuccess={handleGoogleSuccess}
                 onError={handleGoogleError}
                 theme="outline"
                 size="large"
                 text="signin_with"
-                width="100%"
                 logo_alignment="left"
               />
             </div>
