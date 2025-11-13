@@ -15,7 +15,8 @@ interface LessonCardProps {
 export function LessonCard({ lesson }: LessonCardProps) {
   const getDifficultyLabel = (level: number) => {
     if (level <= 3) return { text: "Dễ", color: "bg-green-100 text-green-700" };
-    if (level <= 6) return { text: "Trung bình", color: "bg-yellow-100 text-yellow-700" };
+    if (level <= 6)
+      return { text: "Trung bình", color: "bg-yellow-100 text-yellow-700" };
     return { text: "Khó", color: "bg-red-100 text-red-700" };
   };
 
@@ -89,7 +90,7 @@ export function LessonCard({ lesson }: LessonCardProps) {
         </CardContent>
 
         <CardFooter className="p-4 pt-0">
-          <Button className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white">
+          <Button className="cursor-pointer w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white">
             Xem bài học
           </Button>
         </CardFooter>

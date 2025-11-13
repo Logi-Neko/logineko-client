@@ -8,6 +8,7 @@ import { Menu, X, User, Crown, LogOut } from "lucide-react";
 import { AuthContext } from "@/contexts/AuthContext";
 import SubscriptionModal from "./subscription-modal";
 import logo from "../assets/LOGO.jpg";
+import { useRouter } from "next/navigation";
 
 export function Navigation() {
   const [open, setOpen] = useState(false);
@@ -15,6 +16,7 @@ export function Navigation() {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
   const { isAuthenticated, profile, reset } = useContext(AuthContext);
+  const router = useRouter();
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -36,6 +38,7 @@ export function Navigation() {
     reset();
     setUserMenuOpen(false);
     setIsOpen(false);
+    router.push("/");
   };
 
   return (

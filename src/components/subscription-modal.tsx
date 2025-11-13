@@ -224,7 +224,7 @@ export default function SubscriptionModal({
 
           <Button
             onClick={() => handleUpgrade()}
-            className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-4 rounded-2xl text-lg shadow-lg transition-all duration-300 hover:shadow-xl transform hover:scale-105"
+            className="cursor-pointer w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-4 rounded-xl text-lg shadow-lg transition-all duration-300 hover:shadow-xl transform hover:scale-105"
           >
             <Crown className="w-5 h-5 mr-2" />
             Nâng cấp lên gói Premium 👑

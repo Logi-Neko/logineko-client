@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useAnswerQuestion } from "@/queries/useVideo";
@@ -6,7 +7,13 @@ import { CheckCircle2, ChevronLeft, ChevronRight, XCircle } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "./ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
 import {
   Dialog,
   DialogContent,
@@ -41,7 +48,9 @@ export function VideoPlayer({ videos, lessonName }: VideoPlayerProps) {
 
   // Check if current item is a video or image
   const isVideo = currentVideo?.videoUrl?.match(/\.(mp4|webm|ogg|mov)$/i);
-  const isImage = currentVideo?.videoUrl?.match(/\.(jpg|jpeg|png|gif|webp|avif)$/i);
+  const isImage = currentVideo?.videoUrl?.match(
+    /\.(jpg|jpeg|png|gif|webp|avif)$/i
+  );
 
   useEffect(() => {
     setShowQuestion(false);
@@ -141,7 +150,9 @@ export function VideoPlayer({ videos, lessonName }: VideoPlayerProps) {
       {/* Video Title and Progress */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-800">{currentVideo.title}</h2>
+          <h2 className="text-2xl font-bold text-gray-800">
+            {currentVideo.title}
+          </h2>
           {lessonName && <p className="text-sm text-gray-600">{lessonName}</p>}
         </div>
         <div className="text-sm text-gray-600">
@@ -236,7 +247,11 @@ export function VideoPlayer({ videos, lessonName }: VideoPlayerProps) {
                       showCorrect && isSelected && !isCorrectAnswer
                         ? "border-red-500 bg-red-50"
                         : ""
-                    } ${isCorrect !== null ? "cursor-not-allowed" : "cursor-pointer"}`}
+                    } ${
+                      isCorrect !== null
+                        ? "cursor-not-allowed"
+                        : "cursor-pointer"
+                    }`}
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
@@ -268,7 +283,11 @@ export function VideoPlayer({ videos, lessonName }: VideoPlayerProps) {
                 </Button>
               ) : (
                 <>
-                  <Button onClick={handleRetry} variant="outline" className="flex-1">
+                  <Button
+                    onClick={handleRetry}
+                    variant="outline"
+                    className="flex-1"
+                  >
                     Xem lại video
                   </Button>
                   {canGoNext && (
@@ -342,11 +361,14 @@ export function VideoPlayer({ videos, lessonName }: VideoPlayerProps) {
           </div>
 
           {/* Content - Two Column Layout */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6 overflow-y-auto max-h-[calc(95vh-100px)]">
+          <div className="!bg-gradient-to-br !from-purple-50 !to-pink-50  grid grid-cols-1 lg:grid-cols-2 gap-6 p-6 overflow-y-auto max-h-[calc(95vh-100px)]">
             {/* Left Column - Image */}
             <div className="space-y-4">
-              <div className="bg-gradient-to-br from-purple-50 to-pink-50 p-4 rounded-2xl shadow-inner">
-                <div className="relative bg-white rounded-xl overflow-hidden shadow-lg" style={{ minHeight: '400px' }}>
+              <div className="p-4 rounded-2xl shadow-inner">
+                <div
+                  className="relative bg-white rounded-xl overflow-hidden shadow-lg"
+                  style={{ minHeight: "400px" }}
+                >
                   <img
                     src={currentVideo.videoUrl}
                     alt={currentVideo.title}
@@ -405,19 +427,25 @@ export function VideoPlayer({ videos, lessonName }: VideoPlayerProps) {
                         showCorrect && isSelected && !isCorrectAnswer
                           ? "border-red-500 bg-gradient-to-r from-red-50 to-rose-50 shadow-lg"
                           : ""
-                      } ${isCorrect !== null ? "cursor-not-allowed" : "cursor-pointer"}`}
+                      } ${
+                        isCorrect !== null
+                          ? "cursor-not-allowed"
+                          : "cursor-pointer"
+                      }`}
                     >
                       <div className="flex items-center justify-between gap-4">
                         <div className="flex items-center gap-4 flex-1">
-                          <div className={`flex items-center justify-center w-10 h-10 rounded-full font-bold text-lg transition-all ${
-                            isSelected && !showCorrect
-                              ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white"
-                              : showCorrect && isCorrectAnswer
-                              ? "bg-green-500 text-white"
-                              : showCorrect && isSelected && !isCorrectAnswer
-                              ? "bg-red-500 text-white"
-                              : "bg-gray-100 text-purple-600 group-hover:bg-purple-100"
-                          }`}>
+                          <div
+                            className={`flex items-center justify-center w-10 h-10 rounded-full font-bold text-lg transition-all ${
+                              isSelected && !showCorrect
+                                ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white"
+                                : showCorrect && isCorrectAnswer
+                                ? "bg-green-500 text-white"
+                                : showCorrect && isSelected && !isCorrectAnswer
+                                ? "bg-red-500 text-white"
+                                : "bg-gray-100 text-purple-600 group-hover:bg-purple-100"
+                            }`}
+                          >
                             {option}
                           </div>
                           <span className="text-base text-gray-800 font-medium leading-relaxed">
@@ -443,7 +471,7 @@ export function VideoPlayer({ videos, lessonName }: VideoPlayerProps) {
                     onClick={handleAnswerSubmit}
                     disabled={!selectedAnswer || answerMutation.isPending}
                     size="lg"
-                    className="w-full text-lg py-6 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 shadow-xl hover:shadow-2xl transition-all"
+                    className="cursor-pointer w-full text-lg py-6 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 shadow-xl hover:shadow-2xl transition-all"
                   >
                     {answerMutation.isPending ? (
                       <span className="flex items-center gap-2">
@@ -461,8 +489,12 @@ export function VideoPlayer({ videos, lessonName }: VideoPlayerProps) {
                         <div className="flex items-center gap-3">
                           <CheckCircle2 className="w-8 h-8 text-green-600" />
                           <div>
-                            <p className="font-bold text-green-800 text-lg">Chính xác!</p>
-                            <p className="text-green-700 text-sm">Bạn đã trả lời đúng. Tiếp tục học nhé!</p>
+                            <p className="font-bold text-green-800 text-lg">
+                              Chính xác!
+                            </p>
+                            <p className="text-green-700 text-sm">
+                              Bạn đã trả lời đúng. Tiếp tục học nhé!
+                            </p>
                           </div>
                         </div>
                       </div>
@@ -471,9 +503,14 @@ export function VideoPlayer({ videos, lessonName }: VideoPlayerProps) {
                         <div className="flex items-center gap-3">
                           <XCircle className="w-8 h-8 text-red-600" />
                           <div>
-                            <p className="font-bold text-red-800 text-lg">Chưa chính xác</p>
+                            <p className="font-bold text-red-800 text-lg">
+                              Chưa chính xác
+                            </p>
                             <p className="text-red-700 text-sm">
-                              Đáp án đúng là: <span className="font-bold">{currentVideo?.videoQuestion?.answer}</span>
+                              Đáp án đúng là:{" "}
+                              <span className="font-bold">
+                                {currentVideo?.videoQuestion?.answer}
+                              </span>
                             </p>
                           </div>
                         </div>

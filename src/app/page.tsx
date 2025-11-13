@@ -170,6 +170,12 @@ export default function Home() {
                 <Button
                   size="lg"
                   className="cursor-pointer bg-gradient-to-r from-pink-500 to-violet-600 hover:from-pink-600 hover:to-violet-700 text-white rounded-full px-8 py-4 text-lg font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 hover:rotate-1"
+                  onClick={() =>
+                    window.open(
+                      "https://drive.google.com/drive/folders/1XzelBDi_LVUrxc1gGEIrtY71TrDXfHXw",
+                      "_blank"
+                    )
+                  }
                 >
                   <Play className="w-5 h-5 mr-2 animate-pulse" />
                   Bắt đầu học ngay hôm nay
@@ -430,7 +436,13 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
                 size="lg"
-                className="bg-white text-primary hover:bg-gray-100 rounded-full px-8 py-4 text-lg font-semibold shadow-lg"
+                className="bg-white text-primary hover:bg-gray-100 rounded-full px-8 py-4 text-lg font-semibold shadow-lg cursor-pointer"
+                onClick={() =>
+                  window.open(
+                    "https://drive.google.com/drive/folders/1XzelBDi_LVUrxc1gGEIrtY71TrDXfHXw",
+                    "_blank"
+                  )
+                }
               >
                 <Download className="w-5 h-5 mr-2" />
                 Tải Ứng Dụng Miễn Phí
@@ -476,7 +488,7 @@ export default function Home() {
               <iframe
                 width="100%"
                 height="100%"
-                src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1"
+                src="https://www.youtube.com/embed/nM80czQ_9D4?si=kVgOlNoV40F5dhBH"
                 title="Video giới thiệu LogiNeko"
                 frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"

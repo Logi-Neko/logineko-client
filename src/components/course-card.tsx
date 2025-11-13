@@ -44,7 +44,7 @@ export function CourseCard({ course }: CourseCardProps) {
             {course.name}
           </h3>
 
-          <p className="text-sm text-gray-600 mb-4 line-clamp-3">
+          <p className="text-sm h-10 text-gray-600 mb-4 line-clamp-3">
             {course.description}
           </p>
 
@@ -61,18 +61,10 @@ export function CourseCard({ course }: CourseCardProps) {
               </div>
             )}
           </div>
-
-          {course.isPremium && course.price > 0 && (
-            <div className="mt-3">
-              <Badge variant="secondary" className="text-sm">
-                {course.price.toLocaleString("vi-VN")} ₫
-              </Badge>
-            </div>
-          )}
         </CardContent>
 
         <CardFooter className="p-4 pt-0">
-          <Button className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white">
+          <Button className="cursor-pointer w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white">
             Bắt đầu học
           </Button>
         </CardFooter>
