@@ -2,17 +2,28 @@
 
 import { CourseCard } from "@/components/course-card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { AuthContext } from "@/contexts/AuthContext";
 import { useGetAllCourses } from "@/queries/useCourse";
 import { BookOpen, Search } from "lucide-react";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useContext, useEffect, useState } from "react";
 
 export default function CoursesPage() {
   const { data: courses, isLoading, error } = useGetAllCourses();
   const [searchQuery, setSearchQuery] = useState("");
+  const { isAuthenticated } = useContext(AuthContext);
+  const router = useRouter();
 
-  const filteredCourses = courses?.filter((course) =>
-    course.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    course.description.toLowerCase().includes(searchQuery.toLowerCase())
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.push("/");
+    }
+  }, [isAuthenticated, router]);
+
+  const filteredCourses = courses?.filter(
+    (course) =>
+      course.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      course.description.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -27,7 +38,8 @@ export default function CoursesPage() {
             Khóa học của LogiNeko
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Khám phá các khóa học thú vị và phát triển tư duy logic cùng LogiNeko
+            Khám phá các khóa học thú vị và phát triển tư duy logic cùng
+            LogiNeko
           </p>
         </div>
 
@@ -79,7 +91,11 @@ export default function CoursesPage() {
             {filteredCourses && filteredCourses.length > 0 ? (
               <>
                 <div className="mb-4 text-gray-600">
-                  Tìm thấy <span className="font-semibold">{filteredCourses.length}</span> khóa học
+                  Tìm thấy{" "}
+                  <span className="font-semibold">
+                    {filteredCourses.length}
+                  </span>{" "}
+                  khóa học
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {filteredCourses.map((course) => (
@@ -95,9 +111,7 @@ export default function CoursesPage() {
                 <h3 className="text-xl font-semibold text-gray-800 mb-2">
                   Không tìm thấy khóa học
                 </h3>
-                <p className="text-gray-600">
-                  Thử tìm kiếm với từ khóa khác
-                </p>
+                <p className="text-gray-600">Thử tìm kiếm với từ khóa khác</p>
               </div>
             )}
           </>

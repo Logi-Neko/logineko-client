@@ -10,16 +10,32 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/contexts/AuthContext";
+import { AuthContext, useAuth } from "@/contexts/AuthContext";
+import { useContext, useEffect } from "react";
 
 export default function CourseDetailPage() {
   const params = useParams();
   const router = useRouter();
   const { profile } = useAuth();
   const courseId = Number(params.id);
+  const { isAuthenticated } = useContext(AuthContext);
 
-  const { data: course, isLoading: courseLoading, error: courseError } = useGetCourseById(courseId);
-  const { data: lessons, isLoading: lessonsLoading, error: lessonsError } = useGetLessonsByCourseId(courseId);
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.push("/");
+    }
+  }, [isAuthenticated, router]);
+
+  const {
+    data: course,
+    isLoading: courseLoading,
+    error: courseError,
+  } = useGetCourseById(courseId);
+  const {
+    data: lessons,
+    isLoading: lessonsLoading,
+    error: lessonsError,
+  } = useGetLessonsByCourseId(courseId);
 
   const isLoading = courseLoading || lessonsLoading;
   const error = courseError || lessonsError;
@@ -154,7 +170,8 @@ export default function CourseDetailPage() {
                         Nội dung Premium
                       </h3>
                       <p className="text-gray-600 mb-4">
-                        Khóa học này yêu cầu tài khoản Premium để truy cập. Nâng cấp ngay để mở khóa tất cả nội dung!
+                        Khóa học này yêu cầu tài khoản Premium để truy cập. Nâng
+                        cấp ngay để mở khóa tất cả nội dung!
                       </p>
                       <Button
                         onClick={() => router.push("/profile")}
